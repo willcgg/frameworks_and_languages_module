@@ -15,3 +15,5 @@ ports:
 vscode:
   extensions:
     - ms-azuretools.vscode-docker
+    - streetsidesoftware.code-spell-checker
+    - 42Crunch.vscode-openapi

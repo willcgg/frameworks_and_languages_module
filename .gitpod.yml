@@ -12,6 +12,7 @@ ports:
     visibility: public
 
 # https://open-vsx.org/
+# keep these in sync with ~/.vscode/extensions.json to support people with local dev environments
 vscode:
   extensions:
     - ms-azuretools.vscode-docker

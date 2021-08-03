@@ -1,0 +1,167 @@
+# https://swagger.io/specification/
+openapi: '3.0.2'
+info:
+  title: FreeCycle
+  version: '0.0'
+  description: |
+    FreeCycle your old stuff - keep things out of landfill
+
+    # Introduction
+    * Help the poor
+    * Climate crisis
+    * Right to repair
+
+    # Future ideas
+    This is currently a REST API. A trivial bridge could be created to make this work with SMS.
+    SMS is popular/accessible infrastructure in 3rd world countries.
+    Some SMS API providers give rough geo-location of the sender.
+    With simple SMS messages, people could offer there unheeded bits or even advertise skills.
+
+    # Authentication
+    As this is a service created as a learning activity, there is no security or authentication.
+
+tags:
+  - name: item
+    description: An item that is advertised
+  - name: item_model
+    x-displayName: The item model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/Item" />
+
+x-tagGroups:
+  - name: General
+    tags:
+      - item
+  - name: Models
+    tags:
+      - item_model
+servers:
+  - url: //api.server.test/v1
+    description: The deployed url of the api. Currently it is not hosted externally.
+  
+
+paths:
+  '/item':
+    post:
+      tags:
+        - item
+      summary: Add a new item
+      description: Add a new item with geo-position that is available
+      operationId: addItem
+      requestBody:
+        $ref: '#/components/requestBodies/Item'
+      responses:
+        '405':
+          description: Invalid input
+  '/item/{itemId}':
+    parameters:
+      - name: itemId
+        in: path
+        description: ID of item to return
+        required: true
+        #deprecated: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - item
+      summary: Single item by ID
+      description: Returns a single item
+      operationId: getItemById
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Item not found
+
+    delete:
+      description: Remove an item by itemID
+      operationId: deleteItem
+      responses:
+        '400':
+          description: Invalid itemID
+
+  /items:
+    get:
+      description: Get a list of items matching the search/query criteria
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude
+          style: form
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          style: form
+          schema:
+            type: number
+            format: double
+        - name: radius
+          in: query
+          description: Radius from lat/lon
+          style: form
+          schema:
+            type: number
+            format: double
+
+      responses:
+        '200':
+          description: get list of items matching query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+
+
+
+
+components:
+  examples:
+    Item:
+      value:
+        id: 1234
+        available: false
+
+
+  requestBodies:
+    Item:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: Item description
+                title: Item title
+              - $ref: '#/components/schemas/Item'
+      description: Item object
+      required: true
+
+  schemas:
+    Id:
+      type: integer
+      format: int64
+      readOnly: true
+
+    Item:
+      type: object
+      properties:
+        id:
+          description: Item ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        available:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time

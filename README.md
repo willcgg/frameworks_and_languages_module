@@ -12,7 +12,16 @@ TODO:
 * frontend tests (cypress container)
 	* define class's id's of components
 
-Test
+
+https://oai.github.io/Documentation/start-here.html
+https://openapi.tools/
+
+https://redocly.github.io/redoc/
+https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/calaldees/frameworks_and_languages_module/main/OpenAPI3.yml
+
+Consider OpenAPI testing with
+https://schemathesis.readthedocs.io/en/stable/python.html
+
 
 Setup
 -----

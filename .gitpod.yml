@@ -12,6 +12,6 @@ ports:
     visibility: public
 
 # https://open-vsx.org/
-#vscode:
-#  extensions:
-#    - svelte.svelte-vscode
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker

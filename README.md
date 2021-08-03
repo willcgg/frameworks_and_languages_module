@@ -1,6 +1,8 @@
 # Frameworks and Languages Module
 Stub framework for "Frameworks and Languages" module
 
+* [gitpod](https://gitpod.io/#https://github.com/calaldees/frameworks_and_languages_module)
+
 Project Idea: Freecycle with lat/lon?
 
 TODO:

@@ -1,0 +1,17 @@
+# https://www.gitpod.io/docs/references/gitpod-yml
+
+# Commands to start on workspace startup
+#tasks:
+#  - init: yarn install
+#    command: yarn build
+
+# Ports to expose on workspace startup
+ports:
+  - port: 8000
+    onOpen: open-preview
+    visibility: public
+
+# https://open-vsx.org/
+#vscode:
+#  extensions:
+#    - svelte.svelte-vscode

@@ -13,3 +13,9 @@ TODO:
 	* define class's id's of components
 
 Test
+
+Setup
+-----
+
+* Browser
+	* Allow popups for `https://gitpod.io`

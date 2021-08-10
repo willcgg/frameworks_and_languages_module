@@ -41,7 +41,7 @@ servers:
   
 
 paths:
-  '/item':
+  '/item/':
     post:
       tags:
         - item
@@ -53,7 +53,7 @@ paths:
       responses:
         '405':
           description: Invalid input
-  '/item/{itemId}':
+  '/item/{itemId}/':
     parameters:
       - name: itemId
         in: path
@@ -82,38 +82,58 @@ paths:
           description: Item not found
 
     delete:
+      tags:
+        - item
+      summary: Remove an item
       description: Remove an item by itemID
       operationId: deleteItem
       responses:
         '400':
           description: Invalid itemID
 
-  /items:
+  '/items/':
+    parameters:
+      - name: lat
+        in: query
+        description: Latitude
+        style: form
+        schema:
+          type: number
+          format: double
+      - name: lon
+        in: query
+        description: Longitude
+        style: form
+        schema:
+          type: number
+          format: double
+      - name: radius
+        in: query
+        description: Radius from lat/lon default is 5?
+        style: form
+        schema:
+          type: number
+          format: double
+      - name: date_from
+        in: query
+        description: Item was available from
+        style: form
+        schema:
+          type: string
+          format: date-time
+      - name: date_to
+        in: query
+        description: Item was available to. Default is NOW
+        style: form
+        schema:
+          type: string
+          format: date-time
     get:
+      tags:
+        - item
+      operationId: findItemsByQuery
+      summary: List items from search criteria
       description: Get a list of items matching the search/query criteria
-      parameters:
-        - name: lat
-          in: query
-          description: Latitude
-          style: form
-          schema:
-            type: number
-            format: double
-        - name: lon
-          in: query
-          description: Longitude
-          style: form
-          schema:
-            type: number
-            format: double
-        - name: radius
-          in: query
-          description: Radius from lat/lon
-          style: form
-          schema:
-            type: number
-            format: double
-
       responses:
         '200':
           description: get list of items matching query
@@ -153,6 +173,16 @@ components:
       format: int64
       readOnly: true
 
+    Location:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+
     Item:
       type: object
       properties:
@@ -160,8 +190,20 @@ components:
           description: Item ID
           allOf:
             - $ref: '#/components/schemas/Id'
-        available:
-          type: boolean
-        timestamp:
+        keywords:
+          type: array
+          items: {
+            type: string
+          }
+        description:
+          type: string
+        date_from:
           type: string
           format: date-time
+        date_to:
+          type: string
+          format: date-time
+        location:
+          description: Location of the item
+          allOf:
+            - $ref: '#/components/schemas/Location'

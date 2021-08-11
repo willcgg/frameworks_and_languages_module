@@ -2,11 +2,6 @@
 
 services:
 
-  server:
-    image: server_example
-    build:
-      context: ./server_example/
-
   client:
     image: client_example
     build:

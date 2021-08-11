@@ -1,0 +1,8 @@
+
+
+services:
+
+  server:
+    image: server_example
+    build:
+      context: ./server_example/

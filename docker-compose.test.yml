@@ -5,7 +5,13 @@ services:
   server_test:
     build:
       context: ./server_test/
+    environment:
+      URI_SERVER: http://server/
+    links:
+        - server
 
   client_test:
     build:
       context: ./client_test/
+    links:
+        - client

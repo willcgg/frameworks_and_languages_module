@@ -1,7 +1,13 @@
-FROM nginx:alpine
+FROM python:alpine
+#FROM nginx:alpine
 
-EXPOSE 8001
-VOLUME /logs
+WORKDIR /app/
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY index.html /app/www/
+EXPOSE 8000
+#VOLUME /logs
+
+#COPY nginx.conf /etc/nginx/nginx.conf
+#COPY index.html /app/www/
+
+COPY index.html .
+CMD ["python3", "-m", "http.server"]

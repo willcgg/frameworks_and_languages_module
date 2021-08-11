@@ -5,11 +5,15 @@ services:
   server:
     build:
       context: ./server/
+    expose:
+      - 8000
     ports:
       - 8000:8000
 
   client:
     build:
       context: ./client/
+    expose:
+      - 8001
     ports:
       - 8001:8001

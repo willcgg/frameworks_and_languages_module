@@ -3,9 +3,11 @@
 services:
 
   server:
+    image: server_example
     build:
       context: ./server_example/
 
   client:
+    image: client_example
     build:
       context: ./client_example/

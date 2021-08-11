@@ -10,6 +10,10 @@ ports:
   - port: 8000
     onOpen: open-preview
     visibility: public
+  - port: 8001
+    onOpen: open-preview
+    visibility: public
+
 
 # https://open-vsx.org/
 # keep these in sync with ~/.vscode/extensions.json to support people with local dev environments

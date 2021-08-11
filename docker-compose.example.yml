@@ -1,0 +1,11 @@
+
+
+services:
+
+  server:
+    build:
+      context: ./server_example/
+
+  client:
+    build:
+      context: ./client_example/

@@ -1,0 +1,11 @@
+
+
+services:
+
+  server_test:
+    build:
+      context: ./server_test/
+
+  client_test:
+    build:
+      context: ./client_test/

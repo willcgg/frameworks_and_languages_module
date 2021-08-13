@@ -1,11 +1,9 @@
-import re
 import logging
 
 from http_server import serve_app
 from web_utils import find_route_func
 
 log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 from views import get_index, get_item, post_item, delete_item, get_items
@@ -27,4 +25,5 @@ def app(request):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     serve_app(app, port=8000)

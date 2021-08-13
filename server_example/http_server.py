@@ -14,7 +14,6 @@ import logging
 import traceback
 
 log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
 
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
@@ -86,7 +85,7 @@ def serve_app(func_app, port, host=''):
             s.listen()
             conn, addr = s.accept()
             with conn:
-                log.debug(f'Connected by {addr}')
+                #log.debug(f'Connected by ')
                 while True:
                     data = conn.recv(1024)
                     if not data: break
@@ -94,8 +93,13 @@ def serve_app(func_app, port, host=''):
                     try:
                         response = func_app(request)
                     except Exception as ex:
+                        log.error(request)
+                        traceback.print_exc()
                         response = {'code': 500, 'body': traceback.format_exc()}
+                    # TODO: the code and content length do not work here - they are currently applied in encode response.
+                    log.info(f"{addr} - {request.get('path')} - {response.get('code')} {response.get('Content-length')}")
                     conn.send(encode_response(response))
+                    
 
 
 # python3 -m http.server

@@ -1,3 +1,4 @@
+import re
 import json
 
 def json_response(data, response=None):
@@ -9,3 +10,23 @@ def json_response(data, response=None):
     response['Content-type'] = 'application/json; charset=utf-8'
     response['body'] = json.dumps(data)
     return response
+
+
+def find_route_func(request, routes):
+    r"""
+    >>> ROUTES = (
+    ...   ('GET', r'/$', 'FUNCTION A'),
+    ...   ('GET', r'/test/(?P<id>\d+)$', 'FUNCTION B'),
+    ... )
+    >>> find_route_func({'method': 'GET', 'path': '/test/1234'}, ROUTES)
+    'FUNCTION B'
+    >>> find_route_func({'method': 'GET', 'path': '/'}, ROUTES)
+    'FUNCTION A'
+    >>> find_route_func({'method': 'GET', 'path': '/moose'}, ROUTES)
+    """
+    for method, route, _func in routes:
+        if request.get('method') == method:
+            match = re.match(route, request.get('path'))
+            if match:
+                request.update(match.groupdict())
+                return _func

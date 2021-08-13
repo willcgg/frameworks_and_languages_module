@@ -11,6 +11,7 @@ https://docs.python.org/3/library/http.server.html
 import socket
 import re
 import logging
+import traceback
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -36,6 +37,7 @@ def parse_request(data):
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 RESPONSE_CODES = {
     200: 'OK',
+    201: 'Created',
     301: 'Moved Permanently',
     304: 'Not Modified',
     400: 'Bad Request',
@@ -89,7 +91,10 @@ def serve_app(func_app, port, host=''):
                     data = conn.recv(1024)
                     if not data: break
                     request = parse_request(data)
-                    response = func_app(request)
+                    try:
+                        response = func_app(request)
+                    except Exception as ex:
+                        response = {'code': 500, 'body': traceback.format_exc()}
                     conn.send(encode_response(response))
 
 

@@ -83,7 +83,10 @@ def serve_app(func_app, port, host=''):
         s.bind((host, port))
         while True:
             s.listen()
-            conn, addr = s.accept()
+            try:
+                conn, addr = s.accept()
+            except KeyboardInterrupt as ex:
+                break
             with conn:
                 #log.debug(f'Connected by ')
                 while True:
@@ -95,7 +98,7 @@ def serve_app(func_app, port, host=''):
                     except Exception as ex:
                         log.error(request)
                         traceback.print_exc()
-                        response = {'code': 500, 'body': traceback.format_exc()}
+                        response = {'code': 500, 'body': f'<PRE>{traceback.format_exc()}</PRE>'}
                     # TODO: the code and content length do not work here - they are currently applied in encode response.
                     log.info(f"{addr} - {request.get('path')} - {response.get('code')} {response.get('Content-length')}")
                     conn.send(encode_response(response))

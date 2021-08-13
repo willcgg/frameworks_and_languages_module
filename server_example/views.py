@@ -1,6 +1,6 @@
 from web_utils import json_response
 
-from datamodel import datastore
+from datamodel import datastore, LatLonRange
 
 def get_index(request):
     body = """<html>
@@ -33,8 +33,15 @@ def delete_item(request):
 def post_item(request):
     data = json.loads(request.get('body'))
     data['date_from'] = 'now PLACEHOLDER'
-    item_id = datastore.create_item(data)
-    return json_response({'id': item_id, **data}, {'code': 201})
+    item = datastore.create_item(data)
+    return json_response(item, {'code': 201})
 
 def get_items(request):
-    return json_response({'body': 'get_items'})
+    filters = []
+    if latlonrange := LatLonRange.from_dict(request):
+        filters.append(latlonrange.in_range)
+    if not filters:
+        filters.append(lambda item: True)
+    def filter_items(item):
+        return all(f(item) for f in filters)
+    return json_response(tuple(datastore.filter_items(filter_items)))

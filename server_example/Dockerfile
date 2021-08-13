@@ -6,4 +6,4 @@ COPY *.py .
 
 CMD ["python3", "server.py"]
 # TODO remove
-CMD ["python3", "-m", "http.server"]
+#CMD ["python3", "-m", "http.server"]

@@ -1,3 +1,6 @@
 *.log
 *.tmp
 *.py[cod]
+
+**/.pytest_cache
+**/__pycache__

@@ -7,9 +7,9 @@ DOCKER_COMPOSE_EXAMPLE_TEST:=${DOCKER_COMPOSE_EXAMPLE} --file docker-compose.tes
 run:
 	${DOCKER_COMPOSE} up
 run_example:
-	${DOCKER_COMPOSE_EXAMPLE} up --build
+	${DOCKER_COMPOSE_EXAMPLE} up
 run_example_server:
-	${DOCKER_COMPOSE} --file docker-compose.example.server.yml up
+	${DOCKER_COMPOSE} --file docker-compose.example.server.yml up --build server
 run_example_client:
 	${DOCKER_COMPOSE} --file docker-compose.example.client.yml up
 

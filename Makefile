@@ -10,6 +10,7 @@ run_example:
 	${DOCKER_COMPOSE_EXAMPLE} up
 run_example_server:
 	${DOCKER_COMPOSE} --file docker-compose.example.server.yml up --build server
+		## run --rm server /bin/sh
 run_example_client:
 	${DOCKER_COMPOSE} --file docker-compose.example.client.yml up
 
@@ -23,6 +24,6 @@ test_client:
 test_example:
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up
 test_example_server:
-	${DOCKER_COMPOSE_EXAMPLE_TEST} up server_test
+	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build server_test
 test_example_client:
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up client_test

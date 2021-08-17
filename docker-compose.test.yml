@@ -9,6 +9,8 @@ services:
       URI_SERVER: http://server/
     links:
         - server
+    environment:
+      URI_SERVER: "http://server:8000"
 
   client_test:
     build:

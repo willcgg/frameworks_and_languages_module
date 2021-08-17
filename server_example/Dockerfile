@@ -2,8 +2,9 @@ FROM python:alpine
 
 WORKDIR /app/
 
-COPY *.py .
+COPY main.py .
+COPY /app ./app
 
-CMD ["python3", "server.py"]
+CMD ["python3", "main.py"]
 # TODO remove
 #CMD ["python3", "-m", "http.server"]

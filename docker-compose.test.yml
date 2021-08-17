@@ -6,11 +6,9 @@ services:
     build:
       context: ./server_test/
     environment:
-      URI_SERVER: http://server/
+      URI_SERVER: http://server:8000
     links:
         - server
-    environment:
-      URI_SERVER: "http://server:8000"
 
   client_test:
     build:

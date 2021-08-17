@@ -1,12 +1,11 @@
 import logging
 
-from http_server import serve_app
-from web_utils import find_route_func
+from .web_utils import find_route_func, decode_json_request
 
 log = logging.getLogger(__name__)
 
 
-from views import get_index, get_item, post_item, delete_item, get_items
+from .views import get_index, get_item, post_item, delete_item, get_items
 ROUTES = (
     ('GET', r'/$', get_index),
     ('POST', r'/item$', post_item),
@@ -18,12 +17,9 @@ ROUTES = (
 def app(request):
     #log.debug(request)
 
+    request = decode_json_request(request)
+
     if _func := find_route_func(request, ROUTES):
         return _func(request)
 
     return {'code': 404, 'body': 'no route'}
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-    serve_app(app, port=8000)

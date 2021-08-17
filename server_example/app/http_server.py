@@ -58,7 +58,7 @@ RESPONSE_SEPARATOR = b'\r\n'
 def encode_response(response):
     r"""
     >>> encode_response({'body': '<html></html>'})
-    b'HTTP/1.0 200 OK\r\nContent-type: text/html; charset=utf-8\r\nServer: CustomHTTP/0.0 Python/3.9.0+\r\nDate: Thu, 12 Aug 2021 10:02:02 GMT\r\nContent-Length: 15\r\n\r\n\r\n<html></html>'
+    b'HTTP/1.0 200 OK\r\nContent-type: text/html; charset=utf-8\r\nServer: CustomHTTP/0.0 Python/3.9.0+\r\nDate: Thu, 12 Aug 2021 10:02:02 GMT\r\nContent-Length: 13\r\n\r\n<html></html>'
     """
     response = {**RESPONSE_DEFAULTS, **response}
     code = response.pop('code')
@@ -66,14 +66,14 @@ def encode_response(response):
     body = response.pop('body')
     if isinstance(body, str):
         body = body.encode('utf8')
-    response['Content-Length'] = len(body) + len(RESPONSE_SEPARATOR)
+    response['Content-Length'] = len(body)
     return RESPONSE_SEPARATOR.join((
         head,
         RESPONSE_SEPARATOR.join(
             f'{k}: {v}'.encode('utf8')
             for k, v in response.items()
         ),
-        RESPONSE_SEPARATOR,
+        b'',
         body,
     ))
 

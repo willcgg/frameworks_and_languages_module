@@ -1,11 +1,12 @@
-from web_utils import json_response
+from .web_utils import json_response
 
-from datamodel import datastore, LatLonRange
+from .datamodel import datastore, LatLonRange
 
 def get_index(request):
     body = """<html>
 <head>
     <title>Test</title>
+    <meta charSet="utf-8" />
 </head>
 <body>
     <h1>Test</h1>
@@ -31,7 +32,7 @@ def delete_item(request):
     return {'code': 201}
 
 def post_item(request):
-    data = json.loads(request.get('body'))
+    data = request.get('body')
     data['date_from'] = 'now PLACEHOLDER'
     item = datastore.create_item(data)
     return json_response(item, {'code': 201})

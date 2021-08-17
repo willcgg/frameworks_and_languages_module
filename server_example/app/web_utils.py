@@ -30,3 +30,13 @@ def find_route_func(request, routes):
             if match:
                 request.update(match.groupdict())
                 return _func
+
+def decode_json_request(request):
+    r"""
+    >>> REQUEST = {'Content-Type': 'application/json', 'body': '{"a": 1, "b": 2}'}
+    >>> decode_json_request(REQUEST)
+    {'Content-Type': 'application/json', 'body': {'a': 1, 'b': 2}}
+    """
+    if request.get('Content-Type') == 'application/json':
+        request['body'] = json.loads(request.get('body'))
+    return request

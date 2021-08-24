@@ -11,7 +11,8 @@ services:
         - server
 
   client_test:
-    build:
-      context: ./client_test/
+    #build:
+    #  context: ./client_test/
+    image: cypress/included:8.3.0
     links:
         - client

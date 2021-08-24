@@ -14,5 +14,23 @@ services:
     #build:
     #  context: ./client_test/
     image: cypress/included:8.3.0
+    working_dir: /tests
+    environment:
+      - DISPLAY
+      - CYPRESS_BASE_URL=http://client:8000/
+    #user: ${USER}
+    volumes:
+      # USER passthrough
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      # mount tests - readonly
+      - ${PWD}/client_test/cypress.json:/tests/cypress.json:ro
+      - ${PWD}/client_test/cypress/:/tests/cypress/:ro
+      # mount reports - writeable
+      - ${PWD}/client_test/reports:/tests/reports:rw
+      - ${PWD}/client_test/reports:/tests/cypress/screenshots:rw
+      - ${PWD}/client_test/reports:/tests/cypress/videos:rw
+    entrypoint: ["cypress"]
+    command: ["open", "--project", "."]
     links:
         - client

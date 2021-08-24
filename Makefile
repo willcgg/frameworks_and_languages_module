@@ -1,5 +1,5 @@
 
-DOCKER_COMPOSE:=docker-compose --file docker-compose.yml
+DOCKER_COMPOSE:=USER=$(shell id -u):$(shell id -g) docker-compose --file docker-compose.yml
 DOCKER_COMPOSE_EXAMPLE:=${DOCKER_COMPOSE} --file docker-compose.example.server.yml --file docker-compose.example.client.yml
 DOCKER_COMPOSE_TEST:=${DOCKER_COMPOSE} --file docker-compose.test.yml
 DOCKER_COMPOSE_EXAMPLE_TEST:=${DOCKER_COMPOSE_EXAMPLE} --file docker-compose.test.yml
@@ -26,4 +26,4 @@ test_example:
 test_example_server:
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build server_test
 test_example_client:
-	${DOCKER_COMPOSE_EXAMPLE_TEST} up client_test
+	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test

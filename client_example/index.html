@@ -54,10 +54,10 @@ a {
 			<div id="menu">
 				<ul>
 					<li>
-						<a href="#example1">Example 1</a>
+						<a href="#items">Items</a>
 					</li>
 					<li>
-						<a href="#example2">Example 2</a>
+						<a href="#create">Create</a>
 					</li>
 				</ul>
 			</div>
@@ -72,16 +72,20 @@ a {
 
 		<div id="templates">
 
+			<div class="unknown">
+				Unknown page
+			</div>
+
 			<div class="about">
 				Welcome
 			</div>
 
-			<div class="example2">
-				Example2
+			<div class="items">
+				List items
 			</div>
 
-			<div class="example1">
-				Example1
+			<div class="create">
+				Create item
 			</div>
 
 			<div class="signin">
@@ -94,7 +98,9 @@ a {
 
 		</div>
 <script type="module">
-	//  window.localStorage.getItem("paratrooper");
+	const urlParams = new URLSearchParams(window.location.search);
+
+	//let username = window.localStorage.getItem("username");
 	/// window.localStorage.setItem("paratrooper", JSON.stringify(data));
 
 
@@ -105,8 +111,11 @@ a {
 		}
 	}
 
-	function render_template(name) {
-		console.log('render_template', name)
+	function render_template({name="#unknown", requires_login=false}={}) {
+		console.log('render_template', name);
+		if (requires_login && !window.localStorage.getItem("username")) {
+			name = '#signin';
+		}
 		name = name.replace('#','');
 		const newClone = document.getElementById('templates').getElementsByClassName(name)[0].cloneNode(true);  // https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode
 		const main = document.getElementById('main');
@@ -114,21 +123,19 @@ a {
 		main.appendChild(newClone);
 	}
 	const RENDERERS = {
-		"":()=>render_template('#about'),
-		"#example1": ()=>render_template('#example1'),
-		"#example2": ()=>render_template('#example2'),
-		"#signin"  : ()=>render_template('#signin'),
+		"":()=>render_template({name: '#about'}),
+		"#signin"  : ()=>render_template({name: '#signin'}),
+		"#items": ()=>render_template({name: '#items'}),
+		"#create": ()=>render_template({name: '#create', requires_login: true}),
 	};
 
 	// Hash router
 	function hashchange() {
 		console.log('hashchange', window.location.hash);
-		RENDERERS[window.location.hash]();
-		//window.location.reload()
-		//const hash = window.location.hash // .replace('#','') //.split(',').filter((i)=>typeof(i)==="string" && i.length);
+		(RENDERERS[window.location.hash] || render_template)();
 	}
 	window.addEventListener('hashchange', hashchange);
-	const urlParams = new URLSearchParams(window.location.search);  // query string
+	
 
 	// First load
 	hashchange();

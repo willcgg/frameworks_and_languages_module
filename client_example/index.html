@@ -1,8 +1,146 @@
 <html>
-    <head>
-        <title>Client</title>
-    </head>
-    <body>
-        <h1>Client</h1>
-    </body>
+	<head>
+		<meta charset="utf-8" />
+		<link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
+		<title>FreeCycle Example Client</title>
+<style>
+
+html, body {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+#nav div {
+	display: inline-block;
+}
+
+#nav h1 {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+}
+
+#menu li {
+	display: inline-block;
+}
+
+#user {
+	float: right;
+}
+
+#main {
+
+}
+
+#templates {
+	display: none;
+}
+
+</style>
+	</head>
+	<body>
+		<div id="nav">
+			<div id="logo">
+				<a href="#">
+					&#128205; <!-- Unicode for Map Pin - https://unicode-table.com/en/1F4CD/ -->
+					<h1>FreeCycle</h1>
+				</a>
+			</div>
+			<div id="menu">
+				<ul>
+					<li>
+						<a href="#example1">Example 1</a>
+					</li>
+					<li>
+						<a href="#example2">Example 2</a>
+					</li>
+				</ul>
+			</div>
+			<div id="user">
+				<a href="#signin">Sign in</a>
+			</div>
+		</div>
+
+		<div id="main">
+
+		</div>
+
+		<div id="templates">
+
+			<div class="about">
+				Welcome
+			</div>
+
+			<div class="example2">
+				Example2
+			</div>
+
+			<div class="example1">
+				Example1
+			</div>
+
+			<div class="signin">
+				<form>
+					<input type="text" name="username" placeholder="username">
+					<input type="password" name="password">
+					<input type="submit" id="action_signin" onclick="console.log('todo')">
+				</form>
+			</div>
+
+		</div>
+<script type="module">
+	//  window.localStorage.getItem("paratrooper");
+	/// window.localStorage.setItem("paratrooper", JSON.stringify(data));
+
+
+	function clear_node(node) {
+		let child;
+		while (child = node.lastElementChild) {
+			node.removeChild(child);
+		}
+	}
+
+	function render_template(name) {
+		console.log('render_template', name)
+		name = name.replace('#','');
+		const newClone = document.getElementById('templates').getElementsByClassName(name)[0].cloneNode(true);  // https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode
+		const main = document.getElementById('main');
+		clear_node(main);
+		main.appendChild(newClone);
+	}
+	const RENDERERS = {
+		"":()=>render_template('#about'),
+		"#example1": ()=>render_template('#example1'),
+		"#example2": ()=>render_template('#example2'),
+		"#signin"  : ()=>render_template('#signin'),
+	};
+
+	// Hash router
+	function hashchange() {
+		console.log('hashchange', window.location.hash);
+		RENDERERS[window.location.hash]();
+		//window.location.reload()
+		//const hash = window.location.hash // .replace('#','') //.split(',').filter((i)=>typeof(i)==="string" && i.length);
+	}
+	window.addEventListener('hashchange', hashchange);
+	const urlParams = new URLSearchParams(window.location.search);  // query string
+
+	// First load
+	hashchange();
+
+	/*
+	fetch(`subject-knowledge.json`)
+		.then(response => response.json())
+		.then((data)=>_data=data)
+		.then(renderData)
+	.catch(err => console.error(err));
+	*/
+
+</script>
+	</body>
 </html>

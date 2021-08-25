@@ -1,9 +1,9 @@
-name: Server Test
+name: Server Test Example
 
 on:
   push:
     paths:
-      - 'server/**'
+      - 'server_example/**'
       - 'server_test/**'
 
 jobs:
@@ -13,4 +13,4 @@ jobs:
     steps:
     - uses: actions/checkout@main
     - name: Build and Test
-      run: make test_server
+      run: make test_example_server

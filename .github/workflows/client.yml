@@ -1,13 +1,13 @@
-name: Server Example
+name: Client
 
 on:
   push:
     paths:
-      - 'server_example/**'
+      - 'client/**'
 
 defaults:
   run:
-    working-directory: server_example
+    working-directory: client
 
 jobs:
   test:

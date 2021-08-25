@@ -62,7 +62,6 @@ a {
 				</ul>
 			</div>
 			<div id="user">
-				<a href="#signin">Sign in</a>
 			</div>
 		</div>
 
@@ -84,26 +83,26 @@ a {
 				List items
 			</div>
 
+
+
 			<div class="create">
 				Create item
+				<button data-action="test">Test</button>
 			</div>
 
 			<div class="signin">
 				<form>
 					<input type="text" name="username" placeholder="username">
 					<input type="password" name="password">
-					<input type="submit" id="action_signin" onclick="event.preventDefault(); console.log('todo');">
+					<input type="submit" id="action_signin" data-action="signin">
 				</form>
 			</div>
 
 		</div>
 <script type="module">
-	const urlParams = new URLSearchParams(window.location.search);
-	const urlAPI = urlParams.get('api') || '/api/v1';
 
-	//let username = window.localStorage.getItem("username");
-	/// window.localStorage.setItem("paratrooper", JSON.stringify(data));
 
+	// Utils -------------------------------------------------------------------
 
 	function clear_node(node) {
 		let child;
@@ -111,6 +110,69 @@ a {
 			node.removeChild(child);
 		}
 	}
+
+
+	// Startup -----------------------------------------------------------------
+
+	const urlParams = new URLSearchParams(window.location.search);
+	const urlAPI = urlParams.get('api') || '/api/v1';
+
+	function redirect_to_hash({hash='#'}={}) {
+		render_username_nav();
+		window.location.hash = hash;
+		hashchange();
+	}
+
+	// Signin/Username ---------------------------------------------------------
+	let username = window.localStorage.getItem("username");
+	const $user = document.getElementById('user');
+	function signin(event) {
+		event.preventDefault();
+		username = event.target.parentElement.querySelector('input[name="username"]').value;
+		window.localStorage.setItem("username", username);
+		redirect_to_hash();
+	}
+	function signout(event) {
+		username = undefined;
+		window.localStorage.setItem("username", '');
+		redirect_to_hash();
+	}
+	function render_username_nav() {
+		clear_node($user);
+		if (username) {
+			const $username = document.createElement('span');
+			$username.textContent = username;
+			
+			const $signout = document.createElement('a');
+			$signout.id = 'signout';
+			$signout.href = `#signout`;
+			$signout.textContent = 'signout';
+
+			$user.appendChild($username);
+			$user.appendChild($signout);
+		} else {
+			const $signin = document.createElement('a');
+			$signin.id = 'signin';
+			$signin.href = `#signin`;
+			$signin.textContent = 'signin';
+
+			$user.appendChild($signin);
+		}
+	}
+	render_username_nav();
+
+
+
+	function bind_functions_to_onclick() {
+		for (let $el of document.querySelectorAll("[data-action]")){
+			const action = $el.dataset.action;
+			if (action=='signin') {
+				$el.addEventListener('click', signin);
+			}
+		}
+	}
+
+
 
 
 	function render_items() {
@@ -133,9 +195,11 @@ a {
 		const main = document.getElementById('main');
 		clear_node(main);
 		main.appendChild(newClone);
+		bind_functions_to_onclick();
 	}
 	const RENDERERS = {
 		"":()=>render_template({name: '#about'}),
+		"#signout": signout,
 		"#signin"  : ()=>render_template({name: '#signin'}),
 		"#items": ()=>{render_template({name: '#items'}); render_items();},
 		"#create": ()=>render_template({name: '#create', requires_login: true}),

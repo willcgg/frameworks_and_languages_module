@@ -10,6 +10,6 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@main
     - name: Build server_example container and run unit-tests as part of multistage build
       run: make --directory=server_example build

@@ -5,6 +5,6 @@ WORKDIR /app/
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-COPY *.py pytest.ini .
+COPY *.py pytest.ini ./
 
 CMD ["pytest"]

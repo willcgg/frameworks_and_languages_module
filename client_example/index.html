@@ -99,6 +99,7 @@ a {
 		</div>
 <script type="module">
 	const urlParams = new URLSearchParams(window.location.search);
+	const urlAPI = urlParams.get('api') || '/api/v1';
 
 	//let username = window.localStorage.getItem("username");
 	/// window.localStorage.setItem("paratrooper", JSON.stringify(data));
@@ -109,6 +110,17 @@ a {
 		while (child = node.lastElementChild) {
 			node.removeChild(child);
 		}
+	}
+
+
+	function render_items() {
+		function renderItems(data) {
+			console.log('yeee haw', data);
+		}
+		fetch(`${urlAPI}/items`)
+			.then(response => response.json())
+			.then(renderItems)
+		.catch(err => console.error(err));
 	}
 
 	function render_template({name="#unknown", requires_login=false}={}) {
@@ -125,7 +137,7 @@ a {
 	const RENDERERS = {
 		"":()=>render_template({name: '#about'}),
 		"#signin"  : ()=>render_template({name: '#signin'}),
-		"#items": ()=>render_template({name: '#items'}),
+		"#items": ()=>{render_template({name: '#items'}); render_items();},
 		"#create": ()=>render_template({name: '#create', requires_login: true}),
 	};
 
@@ -139,14 +151,6 @@ a {
 
 	// First load
 	hashchange();
-
-	/*
-	fetch(`subject-knowledge.json`)
-		.then(response => response.json())
-		.then((data)=>_data=data)
-		.then(renderData)
-	.catch(err => console.error(err));
-	*/
 
 </script>
 	</body>

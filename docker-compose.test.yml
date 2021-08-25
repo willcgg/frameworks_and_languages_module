@@ -17,8 +17,8 @@ services:
     working_dir: /tests
     environment:
       - DISPLAY
-      - CYPRESS_BASE_URL=http://client:8000/
-    #user: ${USER}
+      - CYPRESS_BASE_URL=http://client:8001/?api=http://server:8000
+    #user: ${USER}  # ummm, problems with user on cypress startup
     volumes:
       # USER passthrough
       - /etc/passwd:/etc/passwd:ro

@@ -52,6 +52,7 @@ RESPONSE_DEFAULTS = {
     'body': '',
     'Content-type': 'text/html; charset=utf-8',
     'Server': 'CustomHTTP/0.0 Python/3.9.0+',
+    'Access-Control-Allow-Origin': '*',
     'Date': 'Thu, 12 Aug 2021 10:02:02 GMT',  # TODO replace with strp format
 }
 RESPONSE_SEPARATOR = b'\r\n'

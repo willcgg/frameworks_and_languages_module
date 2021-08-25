@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'server_example/**'
+      - 'server_test/**'
 
 jobs:
   publish:
@@ -11,5 +12,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Build server_example container and run unit-tests as part of multistage build
-      run: make --directory=server_example build
+    - name: Build and Test
+      run: make test_example_server

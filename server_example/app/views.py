@@ -1,3 +1,5 @@
+import datetime
+
 from .web_utils import json_response
 
 from .datamodel import datastore, LatLonRange
@@ -33,7 +35,11 @@ def delete_item(request):
 
 def post_item(request):
     data = request.get('body')
-    data['date_from'] = 'now PLACEHOLDER'
+    REQUIRED_FIELDS = frozenset({'user_id', 'keywords', 'description', 'lat', 'lon'})
+    FIELDS = frozenset(data.keys())
+    if not REQUIRED_FIELDS.issubset(FIELDS):
+        return json_response({'error': f"missing fields", 'fields': tuple(REQUIRED_FIELDS - FIELDS)}, {'code': 405})
+    data['date_from'] = datetime.datetime.now().isoformat()
     item = datastore.create_item(data)
     return json_response(item, {'code': 201})
 

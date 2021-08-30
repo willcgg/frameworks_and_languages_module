@@ -214,27 +214,34 @@ components:
 
 
     ItemCreate:
-      type: object
-      properties:
-        user_id:
-          description: User ID
-          type: string
-          example: "user1234"
-        keywords:
-          $ref: '#/components/schemas/Keywords'
-        description:
-          type: string
-          example: "A hammer and nails set"
-        image:
-          type: string
-          description: A URL or a BASE64 encoded image
-          example: https://placekitten.com/200/300
-        location:
-          description: Location of the item
-          allOf:
-            - $ref: '#/components/schemas/Location'
+      required:
+        - user_id
+        - keywords
+        - description
+        - lat
+        - lon
+      allOf:
+        - type: object
+          properties:
+            user_id:
+              description: User ID
+              type: string
+              example: "user1234"
+            keywords:
+              $ref: '#/components/schemas/Keywords'
+            description:
+              type: string
+              example: "A hammer and nails set"
+            image:
+              type: string
+              description: A URL or a BASE64 encoded image
+              example: https://placekitten.com/200/300
+        - $ref: '#/components/schemas/Location'
 
     Item:
+      required:
+        - date_from
+        - item_id
       allOf:
         - type: object
           properties:

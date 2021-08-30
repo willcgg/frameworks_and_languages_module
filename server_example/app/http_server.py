@@ -53,13 +53,13 @@ RESPONSE_DEFAULTS = {
     'Content-type': 'text/html; charset=utf-8',
     'Server': 'CustomHTTP/0.0 Python/3.9.0+',
     'Access-Control-Allow-Origin': '*',
-    'Date': 'Thu, 12 Aug 2021 10:02:02 GMT',  # TODO replace with strp format
+    #'Date': 'Thu, 12 Aug 2021 10:02:02 GMT',  # TODO replace with strp format
 }
 RESPONSE_SEPARATOR = b'\r\n'
 def encode_response(response):
     r"""
     >>> encode_response({'body': '<html></html>'})
-    b'HTTP/1.0 200 OK\r\nContent-type: text/html; charset=utf-8\r\nServer: CustomHTTP/0.0 Python/3.9.0+\r\nAccess-Control-Allow-Origin: *\r\nDate: Thu, 12 Aug 2021 10:02:02 GMT\r\nContent-Length: 13\r\n\r\n<html></html>'
+    b'HTTP/1.0 200 OK\r\nContent-type: text/html; charset=utf-8\r\nServer: CustomHTTP/0.0 Python/3.9.0+\r\nAccess-Control-Allow-Origin: *\r\nContent-Length: 13\r\n\r\n<html></html>'
     """
     response = {**RESPONSE_DEFAULTS, **response}
     code = response.pop('code')

@@ -1,6 +1,15 @@
 *.log
 *.tmp
-*.py[cod]
 
+# Mac Cancer
+*/.DS_Store
+
+# Python Cancer
+*.py[cod]
 **/.pytest_cache
 **/__pycache__
+
+# npm/javascript Cancer
+**/node_modules
+package-lock.json
+yarn.lock

@@ -7,43 +7,40 @@ class LatLon(NamedTuple):
     @staticmethod
     def from_dict(data):
         try:
-            return LatLon(float(data[i]) for i in ('lat', 'lon'))
+            return LatLon(*tuple(float(data[i]) for i in ('lat', 'lon')))
         except (KeyError, TypeError):
             return None
-class LatLonRange(LatLon):
-    range: float
+class LatLonRange(NamedTuple):
+    lat: float
+    lon: float
+    radius: float
     @staticmethod
     def from_dict(data):
         try:
-            return LatLonRange(float(data[i]) for i in ('lat', 'lon', 'range'))
+            return LatLonRange(*tuple(float(data[i]) for i in ('lat', 'lon', 'radius')))
         except (KeyError, TypeError):
             return None
     def in_range(self, latlon:LatLon) -> bool:
         if isinstance(latlon, dict):
             latlon = LatLon.from_dict(latlon)
+        if not latlon:
+            return False
         return \
-            (latlon.lat > self.lat - self.range) and \
-            (latlon.lat < self.lat + self.range) and \
-            (latlon.lon > self.lon - self.range) and \
-            (latlon.lon < self.lon + self.range) and \
+            (latlon.lat > self.lat - self.radius) and \
+            (latlon.lat < self.lat + self.radius) and \
+            (latlon.lon > self.lon - self.radius) and \
+            (latlon.lon < self.lon + self.radius) and \
         True
 
 
 
-ITEMS = {
-    1: {
-        'some': 'data',
-    },
-    2: {
-        'some': 'more',
-    }
-}
+ITEMS = {}
 
 
 class DataModelPythonDict():
     def __init__(self, items):
         self.items = items or {}
-        self.items_id_max = max(self.items.keys())
+        self.items_id_max = max(self.items.keys() or (0,0))
     def get_item(self, item_id):
         return self.items.get(item_id)
     def delete_item(self, item_id):

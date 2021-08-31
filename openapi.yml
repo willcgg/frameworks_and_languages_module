@@ -93,6 +93,12 @@ paths:
 
   '/items/':
     parameters:
+      - name: user_id
+        in: query
+        description: The user the item was created by
+        style: form
+        schema:
+          type: string
       - name: lat
         in: query
         description: Latitude

@@ -12,21 +12,34 @@ import socket
 import re
 import logging
 import traceback
+import urllib.parse
 
 log = logging.getLogger(__name__)
 
-
+class InvalidHTTPRequest(Exception):
+    pass
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
 RE_HTTP_HEADER = re.compile(r'(?P<method>GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) (?P<path>.+) HTTP/(?P<version>.+)\r\n')
 RE_HTTP_HEADER_KEY_VALUE = re.compile(r'(?P<key>.+): (?P<value>.+)\r\n')
 RE_HTTP_BODY = re.compile(r'\r\n\r\n(?P<body>.*)', flags=re.MULTILINE)
 def parse_request(data):
     r"""
-    >>> parse_request(b'GET / HTTP/1.1\r\nHost: localhost:8000\r\nUser-Agent: curl/7.68.0\r\nAccept: */*\r\n\r\n')
-    {'method': 'GET', 'path': '/', 'version': '1.1', 'Host': 'localhost:8000', 'User-Agent': 'curl/7.68.0', 'Accept': '*/*', 'body': ''}
+    >>> parse_request(b'GET /?key1=value1&key2=value2 HTTP/1.1\r\nHost: localhost:8000\r\nUser-Agent: curl/7.68.0\r\nAccept: */*\r\n\r\n')
+    {'method': 'GET', 'path': '/', 'version': '1.1', 'query': {'key1': 'value1', 'key2': 'value2'}, 'Host': 'localhost:8000', 'User-Agent': 'curl/7.68.0', 'Accept': '*/*', 'body': ''}
+    >>> parse_request(b'Not a http request')
+    Traceback (most recent call last):
+    app.http_server.InvalidHTTPRequest: Not a http request
     """
     data = data.decode('utf8')
-    request = RE_HTTP_HEADER.search(data).groupdict()
+    match_header = RE_HTTP_HEADER.search(data)
+    if not match_header:
+        raise InvalidHTTPRequest(data)
+    request = match_header.groupdict()
+    request['query'] = {}
+    path_query = request['path'].split('?', maxsplit=1)
+    if (len(path_query) == 2):
+        request['path'], request['query'] = path_query
+        request['query'] = {k: '|'.join(v) for k,v in urllib.parse.parse_qs(request['query']).items()}
     for header in RE_HTTP_HEADER_KEY_VALUE.finditer(data):
         key, value = header.groupdict().values()
         request[key] = value
@@ -91,9 +104,12 @@ def serve_app(func_app, port, host=''):
             with conn:
                 #log.debug(f'Connected by ')
                 while True:
-                    data = conn.recv(1024)
+                    data = conn.recv(65535)
                     if not data: break
-                    request = parse_request(data)
+                    try:
+                        request = parse_request(data)
+                    except InvalidHTTPRequest as ex:
+                        log.exception("InvalidHTTPRequest")
                     try:
                         response = func_app(request)
                     except Exception as ex:

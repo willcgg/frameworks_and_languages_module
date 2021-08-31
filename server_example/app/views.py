@@ -39,13 +39,14 @@ def post_item(request):
     FIELDS = frozenset(data.keys())
     if not REQUIRED_FIELDS.issubset(FIELDS):
         return json_response({'error': f"missing fields", 'fields': tuple(REQUIRED_FIELDS - FIELDS)}, {'code': 405})
+    # TODO: check data types of input? lat,lon
     data['date_from'] = datetime.datetime.now().isoformat()
     item = datastore.create_item(data)
     return json_response(item, {'code': 201})
 
 def get_items(request):
     filters = []
-    if latlonrange := LatLonRange.from_dict(request):
+    if latlonrange := LatLonRange.from_dict(request['query']):
         filters.append(latlonrange.in_range)
     if not filters:
         filters.append(lambda item: True)

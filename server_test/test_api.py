@@ -8,9 +8,25 @@ Profetional test would not be written like this.
 
 import random
 import urllib.parse
+import datetime
 
 import pytest
 import requests
+
+
+def isiterable(iterable):
+    """
+    https://stackoverflow.com/a/36407550/3356840
+    """
+    if isinstance(iterable, (str, bytes)):
+        return False
+    try:
+        _ = iter(iterable)
+    except TypeError:
+        return False
+    else:
+        return True
+
 
 
 @pytest.fixture
@@ -118,13 +134,52 @@ def test_items(ENDPOINT):
     items = response.json()
     assert isinstance(items, list)
 
-def test_items_filter_location(ENDPOINT, item_factory):
+
+@pytest.fixture
+def get_items(ENDPOINT):
     def _get_items(**kwargs):
+        kwargs = {k:v if not isiterable(v) else ','.join(v) for k,v in kwargs.items()}  # encode arrays as comma separated
         return requests.get(ENDPOINT + f"/items?" + urllib.parse.urlencode(kwargs)).json()
-    # Create mock items in sequence line
-    for lat in (100+(i*0.1) for i in range(10)):
+    return _get_items
+
+
+def test_items_filter_location(get_items, item_factory):
+    # Create mock items in line
+    for lat in (100+(i*0.1) for i in range(6)):
         item_factory(lat=lat, lon=20.0)
     
-    items = _get_items(lat=100, lon=20.0, radius=0.21)
+    items = get_items(lat=100, lon=20.0, radius=0.21)
     assert len(items) == 3, "should return lat=100 + lat=100.1 + lat=100.2"
 
+
+def test_items_filter_username(get_items, item_factory):
+    for i in range(6):
+        item_factory(user_id=f"user{i//2}")
+    
+    items = get_items(user_id='user1')
+    assert len(items) == 2, "There should be items posted by user1"
+
+
+def test_items_filter_date_from(get_items, item_factory):
+    for i in range(2):
+        item_factory()
+    date_from = datetime.datetime.now()
+    for i in range(2):
+        item_factory()
+    items = get_items(date_from=date_from.isoformat())
+    assert len(items) == 2, "There should be items posted since the date_from"
+
+
+def test_items_filter_keywords(get_items, item_factory):
+    item_factory(keywords=("test1", "test2"))
+    item_factory(keywords=("test2", "test3"))
+    item_factory(keywords=("test1", "test2", "test3"))
+
+    items = get_items(keywords=('test1'))
+    assert len(items) == 2
+    items = get_items(keywords=('test2'))
+    assert len(items) == 3
+    items = get_items(keywords=('test1','test2'))
+    assert len(items) == 2
+    items = get_items(keywords=('test1','test2', 'test3'))
+    assert len(items) == 1

@@ -99,6 +99,14 @@ paths:
         style: form
         schema:
           type: string
+      - name: keywords
+        in: query
+        description: A list of keywords that must all be present
+        style: form
+        schema:
+          type: array
+          items:
+            type: string
       - name: lat
         in: query
         description: Latitude

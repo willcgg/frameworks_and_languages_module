@@ -1,4 +1,5 @@
 import datetime
+from collections.abc import Iterable
 
 from .web_utils import json_response
 
@@ -48,6 +49,15 @@ def get_items(request):
     filters = []
     if latlonrange := LatLonRange.from_dict(request['query']):
         filters.append(latlonrange.in_range)
+    if user_id := request['query'].get('user_id'):
+        filters.append(lambda item: item.get('user_id')==user_id)
+    if keywords := request['query'].get('keywords'):
+        keywords = frozenset(keywords.split(','))
+        filters.append(lambda item: keywords.issubset(frozenset(item.get('keywords'))))
+    if date_from := request['query'].get('date_from'):
+        filters.append(lambda item: item.get('date_from')>=date_from)
+    if date_to := request['query'].get('date_to'):
+        filters.append(lambda item: item.get('date_to')<=date_to)
     if not filters:
         filters.append(lambda item: True)
     def filter_items(item):

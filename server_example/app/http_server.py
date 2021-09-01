@@ -103,13 +103,20 @@ def serve_app(func_app, port, host=''):
                 break
             with conn:
                 #log.debug(f'Connected by ')
-                while True:
-                    data = conn.recv(65535)
-                    if not data: break
+                #while True:
+                    data = conn.recv(65535)  # If the request does not come though in a single recv/packet then this server will fail and will not composit multiple TCP packets. Sometimes the head and the body are sent in sequential packets. This happens when the system switches task under load.
+                    #if not data: break
                     try:
                         request = parse_request(data)
                     except InvalidHTTPRequest as ex:
                         log.exception("InvalidHTTPRequest")
+
+                    # HACK: If we don't have a complete message - try to botch another recv - I feel dirty doing this 
+                    # This probably wont work because utf8 decoded data will have a different content length 
+                    # This needs more testing
+                    while int(request.get('Content-Length', 0)) > len(request['body']):
+                        request['body'] += conn.recv(65535).decode('utf8')
+
                     try:
                         response = func_app(request)
                     except Exception as ex:
@@ -119,8 +126,9 @@ def serve_app(func_app, port, host=''):
                     # TODO: the code and content length do not work here - they are currently applied in encode response.
                     log.info(f"{addr} - {request.get('path')} - {response.get('code')} {response.get('Content-length')}")
                     conn.send(encode_response(response))
-                    
 
+
+# https://developer.mozilla.org/en-US/docs/Web/HTTP/Session
 
 # python3 -m http.server
 #  curl http://localhost:8000/ -vvv

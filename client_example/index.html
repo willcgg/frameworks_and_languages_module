@@ -80,7 +80,18 @@ a {
 			</div>
 
 			<div class="items">
-				List items
+				<h2>List items</h2>
+				<ul>
+					<li>
+						<img src="" class="item_image"/>
+						<!-- <a href="" class="item_title">Title</a> -->
+						<a href="" class="item_user_id"></a>
+						LatLon: <span class="item_lat"></span>,<span class="item_lon"></span>
+						<span class="item_date_from"></span>
+						<p class="item_description"></p>
+						<ul class="item_keywords"></ul>
+					</li>
+				</ul>
 			</div>
 
 
@@ -162,6 +173,51 @@ a {
 	render_username_nav();
 
 
+	// Create Item -------------------------------------------------------------
+
+
+
+	// List Items --------------------------------------------------------------
+
+	function render_items() {
+		function renderItems(data) {
+			const $item_list = document.querySelector(".items ul");
+			const new_item_element = () => document.querySelector("#templates .items li").cloneNode(true);
+
+			for (let item of data) {
+				const $item_element = new_item_element();
+				for (let [k, v] of Object.entries(item)) {
+					const $el = $item_element.querySelector(`.item_${k}`);
+					if (!$el) {console.warn(`unknow item field ${k}`); continue;}
+					if (k == "image") {
+						$el.src = v;
+					}
+					else if (k == "user_id") {
+						$el.href = `TODO username URL ${v}`; // TODO!
+						$el.textContent = `@${v}`;
+					}
+					else if (k == "keywords") {
+						v.map((i)=>{
+							const _li = document.createElement('li');
+							_li.textContent = i;
+							$el.appendChild(_li);
+						})
+					}
+					else {
+						$el.textContent = v;
+					}
+				}
+				$item_list.appendChild($item_element);
+			}
+		}
+		fetch(`${urlAPI}/items`)
+			.then(response => response.json())
+			.then(renderItems)
+		.catch(err => console.error(err));
+	}
+
+
+	// Main Rendering ----------------------------------------------------------
 
 	function bind_functions_to_onclick() {
 		for (let $el of document.querySelectorAll("[data-action]")){
@@ -177,15 +233,6 @@ a {
 	// https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript
 
 
-	function render_items() {
-		function renderItems(data) {
-			console.log('yeee haw', data);
-		}
-		fetch(`${urlAPI}/items`)
-			.then(response => response.json())
-			.then(renderItems)
-		.catch(err => console.error(err));
-	}
 
 	function render_template({name="#unknown", requires_login=false}={}) {
 		console.log('render_template', name);

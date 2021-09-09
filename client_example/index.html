@@ -62,7 +62,7 @@ a {
 						<a href="#items">Items</a>
 					</li>
 					<li>
-						<a href="#create">Create</a>
+						<a href="#myitems">MyItems</a>
 					</li>
 				</ul>
 			</div>
@@ -112,9 +112,21 @@ a {
 
 
 
-			<div data-page="create">
-				Create item
-				<button data-action="test">Test</button>
+			<div data-page="myitems">
+				<h2>My Page</h2>
+				<h3>New Item</h3>
+					<form>
+						<label for="create_postcode">Postcode</label><input id="create_postcode" type="text" name="postcode"/>
+						<button data-action="lookup_postcode">Lookup</button>
+						<label for="create_lat">lat</label><input id="create_lat" type="text" name="lat"/>
+						<label for="create_lon">lon</label><input id="create_lon" type="text" name="lon"/>
+						<label for="create_image">image</label><input id="create_image" type="text" name="image" value="http://placekitten.com/100/100"/>
+						<label for="create_keywords">keywords</label><input id="create_keywords" type="text" name="keywords"/>
+						<label for="create_description">description</label><textarea id="create_description" type="text" name="description"></textarea>
+						<input type="submit" id="action_create" data-action="create_item">
+					</form>
+				<h3>My Items</h3>
+				<ul></ul>
 			</div>
 
 			<div data-page="signin">
@@ -338,14 +350,30 @@ a {
 	}
 
 
+	function lookup_postcode(event) {
+		event.preventDefault();
+		const get_form_el = (field) => event.target.parentElement.querySelector(`input[name="${field}"]`);
+		const postcode = get_form_el("postcode").value;
+		fetch(`https://api.postcodes.io/postcodes/${postcode}`)
+			.then(response => response.json())
+			.then(data=>{
+				get_form_el("lat").value = data.result.latitude;
+				get_form_el("lon").value = data.result.longitude;
+			})
+		.catch(err => console.error(err));
+	}
+
 	// Main Rendering ----------------------------------------------------------
 
+	const action_handlers = {
+		signin: signin,
+		create_item: (e)=>console.warn('NotImplemented', 'create_item', e),
+		lookup_postcode: lookup_postcode,
+	}
 	function bind_functions_to_onclick() {
 		for (let $el of document.querySelectorAll("[data-action]")){
 			const action = $el.dataset.action;
-			if (action=='signin') {
-				$el.addEventListener('click', signin);
-			}
+			$el.addEventListener('click', action_handlers[action]);
 		}
 	}
 
@@ -374,7 +402,7 @@ a {
 		"#user": ()=>{render_template({name: '#user'}); render_user();},
 		"#item": ()=>{render_template({name: '#item'}); render_item();},
 		"#items": ()=>{render_template({name: '#items'}); render_items();},
-		"#create": ()=>render_template({name: '#create', requires_login: true}),
+		"#myitems": ()=>render_template({name: '#myitems', requires_login: true}),
 		"#map":()=>{render_template({name: '#map'}); addPoints(getLazyMap(), [{lon: 4.35247, lat: 50.84673, description: "Test"}]); }
 	};
 

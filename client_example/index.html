@@ -278,6 +278,42 @@ a {
 
 	// Create Item -------------------------------------------------------------
 
+	const FIELDS_ITEM_CREATE = ['lat','lon','description','image','keywords'];
+	function get_item_data_from_form_element($el) {
+		return {
+			...Object.fromEntries(
+				FIELDS_ITEM_CREATE.map(field=>[
+					field,
+					$el.querySelector(`[name="${field}"]`).value,
+			])),
+			...{
+				'user_id': username,
+			}
+		}
+	}
+
+	function post_item(data) {
+		// https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+		fetch(`${urlAPI}/item`, {
+			method: 'POST',
+			//mode: 'cors', // no-cors, *cors, same-origin
+			//cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+			//credentials: 'same-origin', // include, *same-origin, omit
+			//redirect: 'follow', // manual, *follow, error
+			//referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data), // body data type must match "Content-Type" header
+		})
+		.then(response => response.json())
+		.catch(err => console.error(err));
+	}
+
+	function create_item(event) {
+		event.preventDefault();
+		post_item(get_item_data_from_form_element(event.target.parentElement));
+	}
 
 	// Delete Item -------------------------------------------------------------
 
@@ -299,6 +335,7 @@ a {
 			$el.textContent = v;
 		},
 		keywords: ($el, v) => {
+			if (!v.map) {return;} // TODO: Bug - keywords should always be an array. This should be handled by the server
 			v.map((i)=>{
 				const _li = document.createElement('li');
 				_li.textContent = i;
@@ -322,12 +359,12 @@ a {
 	}
 
 	function renderDataToTemplate(data, $template, renderFieldLookup) {
-		for (let [k, v] of Object.entries(data)) {
-			const $el = $template.querySelector(`[data-field='${k}']`);
-			if (!$el) {console.warn(`unknown item field ${k}`); continue;}
-			const renderFieldFunction = renderFieldLookup[k];
-			if (renderFieldFunction) {renderFieldFunction($el, v);}
-			else                     {$el.textContent = v;}
+		for (let $el of $template.querySelectorAll(`[data-field]`)) {
+			const field = $el.dataset.field;
+			const value = data[field];
+			const renderFieldFunction = renderFieldLookup[field];
+			if (renderFieldFunction) {renderFieldFunction($el, value);}
+			else                     {$el.textContent = value;}
 		}
 	}
 
@@ -367,7 +404,7 @@ a {
 
 	const action_handlers = {
 		signin: signin,
-		create_item: (e)=>console.warn('NotImplemented', 'create_item', e),
+		create_item: create_item,
 		lookup_postcode: lookup_postcode,
 	}
 	function bind_functions_to_onclick() {

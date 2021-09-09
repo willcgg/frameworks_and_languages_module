@@ -70,7 +70,8 @@ def test_options(ENDPOINT):
     """
     response = requests.options(ENDPOINT)
     assert response.status_code == 204
-    assert response.headers['Access-Control-Allow-Methods']
+    assert 'POST' in response.headers['Access-Control-Allow-Methods']
+    assert 'Content-Type' in response.headers['Access-Control-Allow-Headers']
 
 
 def test_index(ENDPOINT):

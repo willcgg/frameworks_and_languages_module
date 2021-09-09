@@ -97,6 +97,7 @@ def encode_response(response):
 
 def serve_app(func_app, port, host=''):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((host, port))
         while True:
             s.listen()

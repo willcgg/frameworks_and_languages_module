@@ -185,27 +185,31 @@ a {
 		if (!map) {map = initialize_map("map");}
 		return map;
 	}
-	function addPoints(map, points) {
+	function addPoints(map, items) {
 		// https://gis.stackexchange.com/questions/29902/click-a-marker-icon-to-open-a-pop-up-using-openlayers
 		// Markers/Vectors with layer event onclick?
 		// http://harrywood.co.uk/maps/examples/openlayers/marker-popups.view.html
 		const layer = new ol.layer.Vector({
 			source: new ol.source.Vector({
-				features: [
-					new ol.Feature({
-						geometry: new ol.geom.Point(ol.proj.fromLonLat([4.35247, 50.84673]))
+				features: items.map((item)=>{
+					return new ol.Feature({
+						...item,
+						...{
+							geometry: new ol.geom.Point(ol.proj.fromLonLat([item.lon, item.lat])),
+						},
 					})
-				]
+				}),
 			})
 		});
 		map.addLayer(layer);
 
-		function selectMarker(marker) {
-			console.log(marker);
+		function onSelect(e) {
+			//console.log(e);
+			console.log(e.selected[0].j);
 		}
-		//const selectFeatureControl = new ol.control.SelectFeature(layer, { onSelect: selectMarker });
-		//map.addControl(selectFeatureControl);
-		//selectFeatureControl.activate();
+		const selectClick = new ol.interaction.Select({condition: ol.events.condition.click});
+		map.addInteraction(selectClick);
+		selectClick.on('select', onSelect);
 	}
 
 	// Startup -----------------------------------------------------------------
@@ -349,7 +353,7 @@ a {
 		"#item": ()=>{render_template({name: '#item'}); render_item();},
 		"#items": ()=>{render_template({name: '#items'}); render_items();},
 		"#create": ()=>render_template({name: '#create', requires_login: true}),
-		"#map":()=>{render_template({name: '#map'}); addPoints(getLazyMap(), []); }
+		"#map":()=>{render_template({name: '#map'}); addPoints(getLazyMap(), [{lon: 4.35247, lat: 50.84673, description: "Test"}]); }
 	};
 
 	// Hash router

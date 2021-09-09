@@ -43,7 +43,7 @@ def decode_json_request(request):
 
 def options_response(request):
     """
-    >>> options_response({'path': '*', method: 'OPTIONS'})
+    >>> options_response({'path': '*', 'method': 'OPTIONS'})
     {'code': 204, 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE'}
 
     https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS

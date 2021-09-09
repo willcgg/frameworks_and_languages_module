@@ -3,6 +3,11 @@
 		<meta charset="utf-8" />
 		<link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
 		<title>FreeCycle Example Client</title>
+
+		<!-- OpenStreet Map Dependencies - https://openlayers.org/en/latest/doc/quickstart.html --> 
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/css/ol.css" type="text/css">
+		<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/build/ol.js"></script>
+
 <style>
 
 html, body {
@@ -71,42 +76,55 @@ a {
 
 		<div id="templates">
 
-			<div class="unknown">
+			<div data-page="unknown">
 				Unknown page
 			</div>
 
-			<div class="about">
+			<div data-page="about">
 				Welcome
 			</div>
 
-			<div class="items">
+			<div data-page="user">
+
+			</div>
+
+
+			<div data-page="item">
+				
+			</div>
+
+			<div data-page="items">
 				<h2>List items</h2>
 				<ul>
 					<li>
-						<img src="" class="item_image"/>
+						<img src="" data-field="image"/>
 						<!-- <a href="" class="item_title">Title</a> -->
-						<a href="" class="item_user_id"></a>
-						LatLon: <span class="item_lat"></span>,<span class="item_lon"></span>
-						<span class="item_date_from"></span>
-						<p class="item_description"></p>
-						<ul class="item_keywords"></ul>
+						<a href="" data-field="user_id"></a>
+						LatLon: <span data-field="lat"></span>,<span data-field="lon"></span>
+						<span data-field="date_from"></span>
+						<p data-field="description"></p>
+						<ul data-field="keywords"></ul>
 					</li>
 				</ul>
 			</div>
 
 
 
-			<div class="create">
+			<div data-page="create">
 				Create item
 				<button data-action="test">Test</button>
 			</div>
 
-			<div class="signin">
+			<div data-page="signin">
 				<form>
 					<input type="text" name="username" placeholder="username">
 					<input type="password" name="password">
 					<input type="submit" id="action_signin" data-action="signin">
 				</form>
+			</div>
+
+			<div data-page="map">
+				<div id="map"></div>
 			</div>
 
 		</div>
@@ -137,6 +155,47 @@ a {
 		const interval = intervals.find(i => i.seconds < seconds);
 		const count = Math.floor(seconds / interval.seconds);
 		return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
+	}
+
+	// https://codepen.io/j_holtslander/pen/xwrVXL
+	function gravatar_url(email) {
+		return `https://secure.gravatar.com/avatar/${md5(email.toLowerCase().trim())}`;
+	}
+
+	// Maps --------------------------------------------------------------------
+
+	let map;
+	function initialize_map() {
+		map = new ol.Map({
+			target: "map",
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.OSM({
+						url: "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					})
+				})
+			],
+			view: new ol.View({
+				center: ol.proj.fromLonLat([mapLng, mapLat]),
+				zoom: mapDefaultZoom
+			})
+		});
+	}
+	function getLazyMap() {
+		if (!map) {map = initialize_map();}
+		return map;
+	}
+	function addPoints(map, points) {
+		var layer = new ol.layer.Vector({
+			source: new ol.source.Vector({
+				features: [
+					new ol.Feature({
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([4.35247, 50.84673]))
+					})
+				]
+			})
+		});
+		map.addLayer(layer);
 	}
 
 	// Startup -----------------------------------------------------------------
@@ -195,41 +254,48 @@ a {
 
 	// List Items --------------------------------------------------------------
 
-	function render_items() {
-		function renderItems(data) {
-			const $item_list = document.querySelector(".items ul");
-			const new_item_element = () => document.querySelector("#templates .items li").cloneNode(true);
+	const renderItemListFieldLookup = {
+		image: ($el, v) => {
+			$el.src = v;
+		},
+		user_id: ($el, v) => {
+			$el.href = `TODO username URL ${v}`; // TODO!
+			$el.textContent = `@${v}`;
+		},
+		keywords: ($el, v) => {
+			v.map((i)=>{
+				const _li = document.createElement('li');
+				_li.textContent = i;
+				$el.appendChild(_li);
+			})
+		},
+		date_from: ($el, v) => {
+			$el.textContent = timeSince(Date.parse(v));
+		},
+	}
 
-			for (let item of data) {
-				const $item_element = new_item_element();
-				for (let [k, v] of Object.entries(item)) {
-					const $el = $item_element.querySelector(`.item_${k}`);
-					if (!$el) {console.warn(`unknow item field ${k}`); continue;}
-					if (k == "image") {
-						$el.src = v;
-					}
-					else if (k == "user_id") {
-						$el.href = `TODO username URL ${v}`; // TODO!
-						$el.textContent = `@${v}`;
-					}
-					else if (k == "keywords") {
-						v.map((i)=>{
-							const _li = document.createElement('li');
-							_li.textContent = i;
-							$el.appendChild(_li);
-						})
-					}
-					else if (k == "date_from") {
-						$el.textContent = timeSince(Date.parse(v));
-					}
-					else {
-						$el.textContent = v;
-					}
-				}
-				$item_list.appendChild($item_element);
-			}
+	function renderDataToTemplate(data, $template, renderFieldLookup) {
+		for (let [k, v] of Object.entries(data)) {
+			const $el = $template.querySelector(`[data-field='${k}']`);
+			if (!$el) {console.warn(`unknown item field ${k}`); continue;}
+			const renderFieldFunction = renderFieldLookup[k];
+			if (renderFieldFunction) {renderFieldFunction($el, v);}
+			else                     {$el.textContent = v;}
 		}
-		fetch(`${urlAPI}/items`)
+	}
+
+	function renderItems(data) {
+		const $item_list = document.querySelector(`[data-page="items"] ul`);
+		const new_item_element = () => document.querySelector(`[data-page="items"] li`).cloneNode(true);
+
+		for (let item_data of data) {
+			const $new_item_element = new_item_element();
+			$item_list.appendChild($new_item_element);
+			renderDataToTemplate(item_data, $new_item_element, renderItemListFieldLookup);
+		}
+	}
+	function render_items() {
+		fetch(`${urlAPI}/items`)  // TODO: query string filters?
 			.then(response => response.json())
 			.then(renderItems)
 		.catch(err => console.error(err));
@@ -259,7 +325,7 @@ a {
 			name = '#signin';
 		}
 		name = name.replace('#','');
-		const newClone = document.getElementById('templates').getElementsByClassName(name)[0].cloneNode(true);  // https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode
+		const newClone = document.getElementById('templates').querySelector(`[data-page="${name}"]`).cloneNode(true);  // https://developer.mozilla.org/en-US/docs/Web/API/Node/cloneNode
 		const main = document.getElementById('main');
 		clear_node(main);
 		main.appendChild(newClone);
@@ -269,6 +335,8 @@ a {
 		"":()=>render_template({name: '#about'}),
 		"#signout": signout,
 		"#signin"  : ()=>render_template({name: '#signin'}),
+		"#user": ()=>{render_template({name: '#user'}); render_user();},
+		"#item": ()=>{render_template({name: '#item'}); render_item();},
 		"#items": ()=>{render_template({name: '#items'}); render_items();},
 		"#create": ()=>render_template({name: '#create', requires_login: true}),
 	};

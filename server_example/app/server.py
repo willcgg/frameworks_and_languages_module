@@ -1,12 +1,13 @@
 import logging
 
-from .web_utils import find_route_func, decode_json_request
+from .web_utils import find_route_func, decode_json_request, options_response
 
 log = logging.getLogger(__name__)
 
 
 from .views import get_index, get_item, post_item, delete_item, get_items
 ROUTES = (
+    ('OPTIONS', r'.*', options_response),
     ('GET', r'/$', get_index),
     ('POST', r'/item$', post_item),
     ('GET', r'/item/(?P<id>\d+)$', get_item),

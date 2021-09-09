@@ -64,6 +64,14 @@ def item_factory(ENDPOINT):
         assert response.status_code == 201
 
 
+def test_options(ENDPOINT):
+    """
+    Server must respond to OPTIONS request for use with real browser
+    """
+    response = requests.options(ENDPOINT)
+    assert response.status_code == 204
+    assert response.headers['Access-Control-Allow-Methods']
+
 
 def test_index(ENDPOINT):
     """
@@ -131,6 +139,7 @@ def test_items(ENDPOINT):
     url = ENDPOINT + f"/items"
     response = requests.get(url)
     assert response.status_code == 200
+    assert response.headers['Access-Control-Allow-Origin'], 'CORS Headers must be set - preferably to * for this learning exercise'
     items = response.json()
     assert isinstance(items, list)
 

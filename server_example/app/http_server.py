@@ -44,12 +44,14 @@ def parse_request(data):
         key, value = header.groupdict().values()
         request[key] = value
     request.update(RE_HTTP_BODY.search(data).groupdict())
+    log.debug(request)
     return request
 
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 RESPONSE_CODES = {
     200: 'OK',
     201: 'Created',
+    204: 'No Content',
     301: 'Moved Permanently',
     304: 'Not Modified',
     400: 'Bad Request',
@@ -75,6 +77,7 @@ def encode_response(response):
     b'HTTP/1.0 200 OK\r\nContent-type: text/html; charset=utf-8\r\nServer: CustomHTTP/0.0 Python/3.9.0+\r\nAccess-Control-Allow-Origin: *\r\nContent-Length: 13\r\n\r\n<html></html>'
     """
     response = {**RESPONSE_DEFAULTS, **response}
+    log.debug(response)
     code = response.pop('code')
     head = f"HTTP/1.0 {code} {RESPONSE_CODES[code]}".encode('utf8')
     body = response.pop('body')

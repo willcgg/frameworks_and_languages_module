@@ -25,7 +25,7 @@ def find_route_func(request, routes):
     >>> find_route_func({'method': 'GET', 'path': '/moose'}, ROUTES)
     """
     for method, route, _func in routes:
-        if request.get('method') == method:
+        if request.get('method') == method:  # or request.get('Access-Control-Request-Method') == method:
             match = re.match(route, request.get('path'))
             if match:
                 request.update(match.groupdict())
@@ -40,3 +40,33 @@ def decode_json_request(request):
     if request.get('Content-Type') == 'application/json':
         request['body'] = json.loads(request.get('body'))
     return request
+
+def options_response(request):
+    """
+    >>> options_response({'path': '*', method: 'OPTIONS'})
+    {'code': 204, 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE'}
+
+    https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+    Pre-Flight Options for use with real browsers
+
+    curl -X OPTIONS https://example.org -i
+
+    Request:
+    OPTIONS /index.html HTTP/1.1
+
+    Response:
+    HTTP/1.1 204 No Content
+    Date: Mon, 01 Dec 2008 01:15:39 GMT
+    Server: Apache/2.0.61 (Unix)
+    Access-Control-Allow-Origin: https://foo.example
+    Access-Control-Allow-Methods: POST, GET, OPTIONS
+    Access-Control-Allow-Headers: X-PINGOTHER, Content-Type
+    Access-Control-Max-Age: 86400
+    Vary: Accept-Encoding, Origin
+    Keep-Alive: timeout=2, max=100
+    Connection: Keep-Alive
+    """
+    return {
+        'code': 204,
+        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE',
+    }

@@ -97,6 +97,7 @@ a {
 				<h2>List items</h2>
 				<ul>
 					<li>
+						<span data-field="id"></span>
 						<img src="" data-field="image"/>
 						<!-- <a href="" class="item_title">Title</a> -->
 						<a href="" data-field="user_id"></a>
@@ -104,6 +105,7 @@ a {
 						<span data-field="date_from"></span>
 						<p data-field="description"></p>
 						<ul data-field="keywords"></ul>
+						<button data-action="delete">delete</button>
 					</li>
 				</ul>
 			</div>
@@ -265,6 +267,14 @@ a {
 	// Create Item -------------------------------------------------------------
 
 
+	// Delete Item -------------------------------------------------------------
+
+	function delete_item(item_id) {
+		fetch(`${urlAPI}/item/${item_id}`, {method: 'DELETE'})
+			//.then(response => response.json())
+			.then(()=>console.log('delete','ok', item_id))
+		.catch(err => console.error(err));
+	}
 
 	// List Items --------------------------------------------------------------
 
@@ -274,7 +284,7 @@ a {
 		},
 		user_id: ($el, v) => {
 			$el.href = `TODO username URL ${v}`; // TODO!
-			$el.textContent = `@${v}`;
+			$el.textContent = v;
 		},
 		keywords: ($el, v) => {
 			v.map((i)=>{
@@ -286,6 +296,17 @@ a {
 		date_from: ($el, v) => {
 			$el.textContent = timeSince(Date.parse(v));
 		},
+	}
+	function attachDeleteAction($template) {
+		const user_id = $template.querySelector(`[data-field="user_id"]`).textContent;
+		const item_id = $template.querySelector(`[data-field="id"]`).textContent;
+		const $delete = $template.querySelector(`[data-action="delete"]`);
+		if (user_id == username) {
+			$delete.addEventListener('click', () => delete_item(item_id));
+		}
+		else {
+			$delete.style = "display: none;";
+		}
 	}
 
 	function renderDataToTemplate(data, $template, renderFieldLookup) {
@@ -306,6 +327,7 @@ a {
 			const $new_item_element = new_item_element();
 			$item_list.appendChild($new_item_element);
 			renderDataToTemplate(item_data, $new_item_element, renderItemListFieldLookup);
+			attachDeleteAction($new_item_element);
 		}
 	}
 	function render_items() {

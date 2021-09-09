@@ -165,9 +165,9 @@ a {
 	// Maps --------------------------------------------------------------------
 
 	let map;
-	function initialize_map() {
-		map = new ol.Map({
-			target: "map",
+	function initialize_map(target_id) {
+		return new ol.Map({
+			target: target_id,
 			layers: [
 				new ol.layer.Tile({
 					source: new ol.source.OSM({
@@ -176,17 +176,20 @@ a {
 				})
 			],
 			view: new ol.View({
-				center: ol.proj.fromLonLat([mapLng, mapLat]),
-				zoom: mapDefaultZoom
+				center: ol.proj.fromLonLat([4.3, 50.8]),
+				zoom: 4,
 			})
 		});
 	}
 	function getLazyMap() {
-		if (!map) {map = initialize_map();}
+		if (!map) {map = initialize_map("map");}
 		return map;
 	}
 	function addPoints(map, points) {
-		var layer = new ol.layer.Vector({
+		// https://gis.stackexchange.com/questions/29902/click-a-marker-icon-to-open-a-pop-up-using-openlayers
+		// Markers/Vectors with layer event onclick?
+		// http://harrywood.co.uk/maps/examples/openlayers/marker-popups.view.html
+		const layer = new ol.layer.Vector({
 			source: new ol.source.Vector({
 				features: [
 					new ol.Feature({
@@ -196,6 +199,13 @@ a {
 			})
 		});
 		map.addLayer(layer);
+
+		function selectMarker(marker) {
+			console.log(marker);
+		}
+		//const selectFeatureControl = new ol.control.SelectFeature(layer, { onSelect: selectMarker });
+		//map.addControl(selectFeatureControl);
+		//selectFeatureControl.activate();
 	}
 
 	// Startup -----------------------------------------------------------------
@@ -339,6 +349,7 @@ a {
 		"#item": ()=>{render_template({name: '#item'}); render_item();},
 		"#items": ()=>{render_template({name: '#items'}); render_items();},
 		"#create": ()=>render_template({name: '#create', requires_login: true}),
+		"#map":()=>{render_template({name: '#map'}); addPoints(getLazyMap(), []); }
 	};
 
 	// Hash router

@@ -126,7 +126,7 @@ a {
 						<input type="submit" id="action_create" data-action="create_item">
 					</form>
 				<h3>My Items</h3>
-				<ul></ul>
+				<div data-page="items"><ul></ul></div>
 			</div>
 
 			<div data-page="signin">
@@ -306,7 +306,8 @@ a {
 			},
 			body: JSON.stringify(data), // body data type must match "Content-Type" header
 		})
-		.then(response => response.json())
+			.then(response => response.json())
+			.then(()=>hashchange())  // reload the page
 		.catch(err => console.error(err));
 	}
 
@@ -321,6 +322,7 @@ a {
 		fetch(`${urlAPI}/item/${item_id}`, {method: 'DELETE'})
 			//.then(response => response.json())
 			.then(()=>console.log('delete','ok', item_id))
+			.then(()=>hashchange())  // reload the page
 		.catch(err => console.error(err));
 	}
 
@@ -379,8 +381,8 @@ a {
 			attachDeleteAction($new_item_element);
 		}
 	}
-	function render_items() {
-		fetch(`${urlAPI}/items`)  // TODO: query string filters?
+	function render_items(params) {
+		fetch(`${urlAPI}/items?${new URLSearchParams(params).toString()}`)
 			.then(response => response.json())
 			.then(renderItems)
 		.catch(err => console.error(err));
@@ -439,7 +441,7 @@ a {
 		"#user": ()=>{render_template({name: '#user'}); render_user();},
 		"#item": ()=>{render_template({name: '#item'}); render_item();},
 		"#items": ()=>{render_template({name: '#items'}); render_items();},
-		"#myitems": ()=>render_template({name: '#myitems', requires_login: true}),
+		"#myitems": ()=>{render_template({name: '#myitems', requires_login: true}); render_items({user_id: username});},
 		"#map":()=>{render_template({name: '#map'}); addPoints(getLazyMap(), [{lon: 4.35247, lat: 50.84673, description: "Test"}]); }
 	};
 

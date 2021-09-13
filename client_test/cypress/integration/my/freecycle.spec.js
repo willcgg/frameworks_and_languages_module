@@ -1,5 +1,13 @@
 describe('FreeCycle', () => {
 
+	const is_a_number = value => {
+		expect(Number.isNaN(+value), 'input should be a number').to.eq(false)
+	}
+
+
+	Cypress.Commands.add('navigate', (item) => {
+		cy.get("#nav").contains(item).should('be.visible').click();
+	})
 	Cypress.Commands.add('signin', (user_id, password) => {
 		user_id = user_id || `testname${Cypress._.random(0, 1e6)}`;
 		cy.get("#user").contains("signin").click();
@@ -16,10 +24,11 @@ describe('FreeCycle', () => {
 		cy.get("#user").contains("signout").should('be.visible').click();
 		cy.get("#user").contains('signin').should('be.visible');
 	})
-
-	Cypress.Commands.add('navigate', (item) => {
-		cy.get("#nav").contains(item).should('be.visible').click();
+	Cypress.Commands.add('create_item', (item) => {
+		cy.navigate("MyItems");
+		// TODO
 	})
+
 
 	beforeEach(() => {
 		cy.visit('');  // Navigate to Env variable `CYPRESS_BASE_URL`
@@ -53,11 +62,39 @@ describe('FreeCycle', () => {
 		cy.get("#action_signin").should('be.visible');
 	});
 
-	it('MyItems should show is signed in', () => {
+	it('MyItems should show if signed in', () => {
 		cy.signin();
 		cy.navigate("MyItems");
 		cy.get("#main").contains('My Page').should('be.visible');
 	});
 
+	it('MyItems postcode lookup', () => {
+		cy.signin();
+		cy.navigate("MyItems");
 
+		cy.get('#main input[name="lat"]').should('not.have.value');
+		cy.get('#main input[name="lon"]').should('not.have.value');
+
+		cy.get('#main input[name="postcode"]').type("CT1 1QU");
+		cy.get('#main [data-action="lookup_postcode"]').click();
+
+		//cy.get('#main input[name="lat"]').should('not.be.empty');
+		cy.get('#main input[name="lat"]').invoke("val").should(is_a_number)
+		cy.get('#main input[name="lon"]').invoke("val").should(is_a_number)
+	});
+
+	it('Create Item', () => {
+		cy.signin();
+		cy.navigate("MyItems");
+
+		cy.get('#main input[name="lat"]').should('not.have.value');
+		cy.get('#main input[name="lon"]').should('not.have.value');
+
+		cy.get('#main input[name="postcode"]').type("CT1 1QU");
+		cy.get('#main [data-action="lookup_postcode"]').click();
+
+		//cy.get('#main input[name="lat"]').should('not.be.empty');
+		cy.get('#main input[name="lat"]').invoke("val").should(is_a_number)
+		cy.get('#main input[name="lon"]').invoke("val").should(is_a_number)
+	});
 });

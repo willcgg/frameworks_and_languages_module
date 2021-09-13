@@ -42,4 +42,5 @@ test_example_client:
 	#${DOCKER_COMPOSE_EXAMPLE_TEST} down
 
 cypress:
-	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test
+	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test open --project .
+	${DOCKER_COMPOSE_EXAMPLE_TEST} down

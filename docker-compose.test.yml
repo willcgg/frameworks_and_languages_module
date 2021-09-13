@@ -31,6 +31,7 @@ services:
       - ${PWD}/client_test/reports:/tests/cypress/screenshots:rw
       - ${PWD}/client_test/reports:/tests/cypress/videos:rw
     entrypoint: ["cypress"]
-    command: ["open", "--project", "."]
+    #command: ["open", "--project", "."]
+    command: ["run"]
     links:
         - client

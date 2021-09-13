@@ -8,38 +8,39 @@ DOCKER_COMPOSE_EXAMPLE_TEST:=${DOCKER_COMPOSE_EXAMPLE} --file docker-compose.tes
 .DEFAULT_GOAL:=help
 help:	## display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-8s\033[0m %s\n", $$1, $$2 } END{print ""}' $(MAKEFILE_LIST)
+	# deafult server port 8000
+	# default client port 8001
 
-run:
+run:  ##
 	${DOCKER_COMPOSE} up
-run_example:
+run_example:  ## run example server and client containers
 	${DOCKER_COMPOSE_EXAMPLE} up
-run_example_server:
+run_example_server:  ##
 	${DOCKER_COMPOSE} --file docker-compose.example.server.yml up --build server
 		## run --rm server /bin/sh
-run_example_client:
-	${DOCKER_COMPOSE} --file docker-compose.example.client.yml up
+#run_example_client:  ##
+#	${DOCKER_COMPOSE} --file docker-compose.example.client.yml up
 
-test:
-	${DOCKER_COMPOSE_TEST} up
+#test:  ##
+#	${DOCKER_COMPOSE_TEST} up --build
+#	${DOCKER_COMPOSE_TEST} down
+test_server:  ##
+	${DOCKER_COMPOSE_TEST} up --build server_test
 	${DOCKER_COMPOSE_TEST} down
-test_server:
-	${DOCKER_COMPOSE_TEST} up server_test
-	${DOCKER_COMPOSE_TEST} down
-test_client:
-	${DOCKER_COMPOSE_TEST} up client_test
+test_client:  ##
+	${DOCKER_COMPOSE_TEST} up --buils client_test
 	${DOCKER_COMPOSE_TEST} down
 
-test_example:
-	${DOCKER_COMPOSE_EXAMPLE_TEST} up
-	${DOCKER_COMPOSE_EXAMPLE_TEST} down
-test_example_server:
+#test_example:  ##
+#	${DOCKER_COMPOSE_EXAMPLE_TEST} up
+#	${DOCKER_COMPOSE_EXAMPLE_TEST} down
+test_example_server:  ##
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build server_test
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down
-test_example_client:
+test_example_client:  ##
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down
 
-cypress:
-	# Launch local cypress from container
+cypress:  ## Launch local cypress from container (requires an XServer and DISPLAY env)
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test open --project .
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down

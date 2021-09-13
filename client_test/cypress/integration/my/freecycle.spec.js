@@ -42,7 +42,12 @@ describe('FreeCycle', () => {
 			cy.get(`#main [name="${k}"]`).clear().type(v);
 		}
 		cy.get('#main [data-action="create_item"]').click();
-		cy.contains(uuid).should('be.visible');
+		return cy.contains(uuid).should('be.visible').parent('li').get('[data-field="id"]').invoke('text');
+	})
+	Cypress.Commands.add('delete_item', (item_id) => {
+		cy.navigate("MyItems");
+		cy.contains(`[data-field="id"]`, item_id).parent("li").find(`[data-action="delete"]`).click();
+		cy.contains(`[data-field="id"]`, item_id).should('not.exist');
 	})
 
 
@@ -99,10 +104,14 @@ describe('FreeCycle', () => {
 		cy.get('#main input[name="lon"]').invoke("val").should(is_a_number)
 	});
 
-	it('Create Item', () => {
+	it('Create and Delete Item', () => {
 		cy.signin();
 		cy.navigate("MyItems");
 
-		cy.create_item();
+		cy.create_item()
+			.then(item_id => {
+				cy.delete_item(item_id);
+			});
+		
 	});
 });

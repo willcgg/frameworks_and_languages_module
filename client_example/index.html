@@ -166,6 +166,7 @@ a {
 	];
 	function timeSince(datetime_ms) {
 		const seconds = Math.floor((Date.now() - datetime_ms) / 1000);
+		if (seconds<=1) {return 'Now';}
 		const interval = intervals.find(i => i.seconds < seconds);
 		const count = Math.floor(seconds / interval.seconds);
 		return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;

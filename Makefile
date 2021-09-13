@@ -4,6 +4,11 @@ DOCKER_COMPOSE_EXAMPLE:=${DOCKER_COMPOSE} --file docker-compose.example.server.y
 DOCKER_COMPOSE_TEST:=${DOCKER_COMPOSE} --file docker-compose.test.yml
 DOCKER_COMPOSE_EXAMPLE_TEST:=${DOCKER_COMPOSE_EXAMPLE} --file docker-compose.test.yml
 
+.PHONY: help
+.DEFAULT_GOAL:=help
+help:	## display this help
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-8s\033[0m %s\n", $$1, $$2 } END{print ""}' $(MAKEFILE_LIST)
+
 run:
 	${DOCKER_COMPOSE} up
 run_example:
@@ -35,3 +40,6 @@ test_example_client:
 	# Temp disabled
 	#${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test
 	#${DOCKER_COMPOSE_EXAMPLE_TEST} down
+
+cypress:
+	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test

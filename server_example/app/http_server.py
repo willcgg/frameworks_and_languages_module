@@ -25,7 +25,7 @@ RE_HTTP_BODY = re.compile(r'\r\n\r\n(?P<body>.*)', flags=re.MULTILINE)
 def parse_request(data):
     r"""
     >>> parse_request(b'GET /?key1=value1&key2=value2 HTTP/1.1\r\nHost: localhost:8000\r\nUser-Agent: curl/7.68.0\r\nAccept: */*\r\n\r\n')
-    {'method': 'GET', 'path': '/', 'version': '1.1', 'query': {'key1': 'value1', 'key2': 'value2'}, 'Host': 'localhost:8000', 'User-Agent': 'curl/7.68.0', 'Accept': '*/*', 'body': ''}
+    {'method': 'GET', 'path': '/', 'version': '1.1', 'query': {'key1': 'value1', 'key2': 'value2'}, 'host': 'localhost:8000', 'user-agent': 'curl/7.68.0', 'accept': '*/*', 'body': ''}
     >>> parse_request(b'Not a http request')
     Traceback (most recent call last):
     app.http_server.InvalidHTTPRequest: Not a http request
@@ -42,7 +42,7 @@ def parse_request(data):
         request['query'] = {k: '|'.join(v) for k,v in urllib.parse.parse_qs(request['query']).items()}
     for header in RE_HTTP_HEADER_KEY_VALUE.finditer(data):
         key, value = header.groupdict().values()
-        request[key] = value
+        request[key.lower()] = value
     request.update(RE_HTTP_BODY.search(data).groupdict())
     log.debug(request)
     return request

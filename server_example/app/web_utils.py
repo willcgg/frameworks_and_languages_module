@@ -36,11 +36,11 @@ def find_route_func(request, routes):
 
 def decode_json_request(request):
     r"""
-    >>> REQUEST = {'Content-Type': 'application/json', 'body': '{"a": 1, "b": 2}'}
+    >>> REQUEST = {'content-type': 'application/json', 'body': '{"a": 1, "b": 2}'}
     >>> decode_json_request(REQUEST)
-    {'Content-Type': 'application/json', 'body': {'a': 1, 'b': 2}}
+    {'content-type': 'application/json', 'body': {'a': 1, 'b': 2}}
     """
-    if request.get('Content-Type') == 'application/json':
+    if request.get('content-type') == 'application/json':
         request['body'] = json.loads(request.get('body'))
     return request
 

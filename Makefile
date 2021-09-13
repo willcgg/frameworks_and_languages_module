@@ -26,9 +26,8 @@ test_server:
 	${DOCKER_COMPOSE_TEST} up server_test
 	${DOCKER_COMPOSE_TEST} down
 test_client:
-	# Temp disbaled
-	#${DOCKER_COMPOSE_TEST} up client_test
-	#${DOCKER_COMPOSE_TEST} down
+	${DOCKER_COMPOSE_TEST} up client_test
+	${DOCKER_COMPOSE_TEST} down
 
 test_example:
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up
@@ -37,10 +36,10 @@ test_example_server:
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build server_test
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down
 test_example_client:
-	# Temp disabled
-	#${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test
-	#${DOCKER_COMPOSE_EXAMPLE_TEST} down
+	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test
+	${DOCKER_COMPOSE_EXAMPLE_TEST} down
 
 cypress:
+	# Launch local cypress from container
 	${DOCKER_COMPOSE_EXAMPLE_TEST} up --build client_test open --project .
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down

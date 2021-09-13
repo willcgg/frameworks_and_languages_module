@@ -12,5 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@main
-    - name: Build and Test
-      run: make test_example_client
+    # Temp Disable on CI - the cypress container is 3GB
+    #- name: Build and Test
+    #  run: make test_example_client

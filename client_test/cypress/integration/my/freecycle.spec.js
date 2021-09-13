@@ -24,9 +24,25 @@ describe('FreeCycle', () => {
 		cy.get("#user").contains("signout").should('be.visible').click();
 		cy.get("#user").contains('signin').should('be.visible');
 	})
-	Cypress.Commands.add('create_item', (item) => {
+	Cypress.Commands.add('create_item', (kwargs) => {
 		cy.navigate("MyItems");
-		// TODO
+		const uuid = Cypress._.random(0, 1e6);
+		kwargs = {
+			...{
+				lat: '1',
+				lon: '1',
+				description: 'item from cypress test',
+				image: 'http://placekitten.com/100/100',
+				keywords: 'item1, item2, item3',
+			},
+			...kwargs,
+		}
+		kwargs.description += uuid;
+		for (let [k,v] of Object.entries(kwargs)) {
+			cy.get(`#main [name="${k}"]`).clear().type(v);
+		}
+		cy.get('#main [data-action="create_item"]').click();
+		cy.contains(uuid).should('be.visible');
 	})
 
 
@@ -87,14 +103,6 @@ describe('FreeCycle', () => {
 		cy.signin();
 		cy.navigate("MyItems");
 
-		cy.get('#main input[name="lat"]').should('not.have.value');
-		cy.get('#main input[name="lon"]').should('not.have.value');
-
-		cy.get('#main input[name="postcode"]').type("CT1 1QU");
-		cy.get('#main [data-action="lookup_postcode"]').click();
-
-		//cy.get('#main input[name="lat"]').should('not.be.empty');
-		cy.get('#main input[name="lat"]').invoke("val").should(is_a_number)
-		cy.get('#main input[name="lon"]').invoke("val").should(is_a_number)
+		cy.create_item();
 	});
 });

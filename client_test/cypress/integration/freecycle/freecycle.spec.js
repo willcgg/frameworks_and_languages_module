@@ -5,6 +5,8 @@ describe('FreeCycle', () => {
 	}
 
 
+	// FreeCycle Commands ------------------------------------------------------
+
 	Cypress.Commands.add('navigate', (item) => {
 		cy.get("#nav").contains(item).should('be.visible').click();
 	})
@@ -50,11 +52,14 @@ describe('FreeCycle', () => {
 		cy.contains(`[data-field="id"]`, item_id).should('not.exist');
 	})
 
+	// Each --------------------------------------------------------------------
 
 	beforeEach(() => {
 		cy.visit('');  // Navigate to Env variable `CYPRESS_BASE_URL`
 		// Local storage is reset per test, so the user should not be logged in
 	});
+
+	// Tests -------------------------------------------------------------------
 
 	it('navigation contents', () => {
 		cy.get('#nav h1').should('have.text', 'FreeCycle');

@@ -13,7 +13,7 @@ services:
   client_test:
     #build:
     #  context: ./client_test/
-    image: cypress/included:8.3.0
+    image: cypress/included:8.4.0
     working_dir: /tests
     environment:
       - DISPLAY
@@ -28,8 +28,9 @@ services:
       - ${PWD}/client_test/cypress/:/tests/cypress/:ro
       # mount reports - writeable
       - ${PWD}/client_test/reports:/tests/reports:rw
-      - ${PWD}/client_test/reports:/tests/cypress/screenshots:rw
-      - ${PWD}/client_test/reports:/tests/cypress/videos:rw
+      # output paths are redundent and now set in `cypress.json` to be ./reports
+      #- ${PWD}/client_test/reports:/tests/cypress/screenshots:rw
+      #- ${PWD}/client_test/reports:/tests/cypress/videos:rw
     entrypoint: ["cypress"]
     #command: ["open", "--project", "."]
     command: ["run"]

@@ -20,7 +20,7 @@ describe('FreeCycle', () => {
 		cy.get("#user").contains(user_id);
 		cy.get("#user").contains('signout');
 
-		//return user_id;
+		return cy.wrap({user_id});
 	})
 	Cypress.Commands.add('signout', () => {
 		cy.get("#user").contains("signout").should('be.visible').click();
@@ -104,7 +104,6 @@ describe('FreeCycle', () => {
 		cy.get('#main input[name="postcode"]').type("CT1 1QU");
 		cy.get('#main [data-action="lookup_postcode"]').click();
 
-		//cy.get('#main input[name="lat"]').should('not.be.empty');
 		cy.get('#main input[name="lat"]').invoke("val").should(is_a_number)
 		cy.get('#main input[name="lon"]').invoke("val").should(is_a_number)
 	});

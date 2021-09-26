@@ -33,6 +33,7 @@ def parse_request(data):
     data = data.decode('utf8')
     match_header = RE_HTTP_HEADER.search(data)
     if not match_header:
+        log.error(data)
         raise InvalidHTTPRequest(data)
     request = match_header.groupdict()
     request['query'] = {}
@@ -114,6 +115,7 @@ def serve_app(func_app, port, host=''):
                         request = parse_request(data)
                     except InvalidHTTPRequest as ex:
                         log.exception("InvalidHTTPRequest")
+                        continue
 
                     # HACK: If we don't have a complete message - try to botch another recv - I feel dirty doing this 
                     # This probably wont work because utf8 decoded data will have a different content length 

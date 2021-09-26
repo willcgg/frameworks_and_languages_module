@@ -135,7 +135,9 @@ def serve_app(func_app, port, host=''):
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Session
 
 # python3 -m http.server
-#  curl http://localhost:8000/ -vvv
+# curl http://localhost:8000/ -vvv
+# curl -d '{"user_id": "user1234", "keywords": ["hammer", "nails", "tools"], "description": "A hammer and nails set. In canterbury", "lat": 51.2798438, "lon": 1.0830275}' -H "Content-Type: application/json" -X POST https://8000-silver-wildebeest-8e6oafen.ws-eu18.gitpod.io/item
+# curl https://8000-silver-wildebeest-8e6oafen.ws-eu18.gitpod.io/items
 
 #< HTTP/1.0 200 OK
 #< Server: SimpleHTTP/0.6 Python/3.9.0+

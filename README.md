@@ -15,10 +15,10 @@ TODO:
 	* define class's id's of components
 
 
-https://oai.github.io/Documentation/start-here.html
-https://openapi.tools/
-https://swagger.io/specification/
-https://redocly.github.io/redoc/
+* https://oai.github.io/Documentation/start-here.html
+* https://openapi.tools/
+* https://swagger.io/specification/
+* https://redocly.github.io/redoc/
 
 
 Consider OpenAPI testing with

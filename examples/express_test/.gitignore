@@ -1,0 +1,10 @@
+node_modules
+package-lock.json
+
+# basic express template
+bin
+public
+routes
+views
+package.json
+app.js 

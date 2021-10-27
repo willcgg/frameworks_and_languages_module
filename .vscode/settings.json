@@ -1,3 +1,7 @@
 {
-    "keyboard.layout": "00000809"
+    "keyboard.layout": "00000809",
+    "workbench.startupEditor": "none",
+    "editor.renderWhitespace": "all",
+    "editor.renderControlCharacters": true,
+    "editor.bracketPairColorization.enabled": true
 }

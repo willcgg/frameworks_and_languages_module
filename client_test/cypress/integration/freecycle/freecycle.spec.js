@@ -6,7 +6,7 @@ describe('FreeCycle', () => {
 
 
 	// FreeCycle Commands ------------------------------------------------------
-
+	/*
 	Cypress.Commands.add('navigate', (item) => {
 		cy.get("#nav").contains(item).should('be.visible').click();
 	})
@@ -26,11 +26,13 @@ describe('FreeCycle', () => {
 		cy.get("#user").contains("signout").should('be.visible').click();
 		cy.get("#user").contains('signin').should('be.visible');
 	})
+	*/
 	Cypress.Commands.add('create_item', (kwargs) => {
-		cy.navigate("MyItems");
+		//cy.navigate("MyItems");  // HACK - Simplify Client
 		const uuid = Cypress._.random(0, 1e6);
 		kwargs = {
 			...{
+				user_id: 'bob',   // HACK - Simplify Client
 				lat: '1',
 				lon: '1',
 				description: 'item from cypress test',
@@ -44,10 +46,10 @@ describe('FreeCycle', () => {
 			cy.get(`#main [name="${k}"]`).clear().type(v);
 		}
 		cy.get('#main [data-action="create_item"]').click();
-		return cy.contains(uuid).should('be.visible').parent('li').get('[data-field="id"]').invoke('text');
+		return cy.contains(uuid).should('be.visible').parent('li').find('[data-field="id"]').invoke('text');
 	})
 	Cypress.Commands.add('delete_item', (item_id) => {
-		cy.navigate("MyItems");
+		//cy.navigate("MyItems");  // HACK - Simplify Client
 		cy.contains(`[data-field="id"]`, item_id).parent("li").find(`[data-action="delete"]`).click();
 		cy.contains(`[data-field="id"]`, item_id).should('not.exist');
 	})
@@ -60,7 +62,7 @@ describe('FreeCycle', () => {
 	});
 
 	// Tests -------------------------------------------------------------------
-
+	/*
 	it('navigation contents', () => {
 		cy.get('#nav h1').should('have.text', 'FreeCycle');
 		cy.get('#nav a')
@@ -107,10 +109,10 @@ describe('FreeCycle', () => {
 		cy.get('#main input[name="lat"]').invoke("val").should(is_a_number)
 		cy.get('#main input[name="lon"]').invoke("val").should(is_a_number)
 	});
-
+	*/
 	it('Create and Delete Item', () => {
-		cy.signin();
-		cy.navigate("MyItems");
+		//cy.signin();    // HACK - Simplify Client
+		//cy.navigate("MyItems");    // HACK - Simplify Client
 
 		cy.create_item()
 			.then(item_id => {
@@ -118,4 +120,5 @@ describe('FreeCycle', () => {
 			});
 		
 	});
+
 });

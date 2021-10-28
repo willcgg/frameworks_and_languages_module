@@ -5,8 +5,10 @@
 		<title>FreeCycle Example Client</title>
 
 		<!-- OpenStreet Map Dependencies - https://openlayers.org/en/latest/doc/quickstart.html --> 
+		<!--
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/css/ol.css" type="text/css">
 		<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/build/ol.js"></script>
+		-->
 
 <style>
 
@@ -56,6 +58,7 @@ a {
 					<h1>FreeCycle</h1>
 				</a>
 			</div>
+			<!-- // HACK - Simplify Client
 			<div id="menu">
 				<ul>
 					<li>
@@ -68,9 +71,25 @@ a {
 			</div>
 			<div id="user">
 			</div>
+			-->
 		</div>
 
 		<div id="main">
+
+			<!-- // HACK - Simplify Client -->
+			<h3>New Item</h3>
+			<form>
+				<label for="create_user_id">Username</label><input id="create_user_id" type="text" name="user_id"/>
+				<label for="create_lat">lat</label><input id="create_lat" type="text" name="lat"/>
+				<label for="create_lon">lon</label><input id="create_lon" type="text" name="lon"/>
+				<label for="create_image">image</label><input id="create_image" type="text" name="image" value="http://placekitten.com/100/100"/>
+				<label for="create_keywords">keywords</label><input id="create_keywords" type="text" name="keywords"/>
+				<label for="create_description">description</label><textarea id="create_description" type="text" name="description"></textarea>
+				<input type="submit" id="action_create" data-action="create_item">
+			</form>
+			<h3>Items</h3>
+			<div data-page="items"><ul></ul></div>
+
 
 		</div>
 
@@ -178,7 +197,7 @@ a {
 	}
 
 	// Maps --------------------------------------------------------------------
-
+	/*
 	let map;
 	function initialize_map(target_id) {
 		return new ol.Map({
@@ -226,12 +245,14 @@ a {
 		map.addInteraction(selectClick);
 		selectClick.on('select', onSelect);
 	}
+	*/
 
 	// Startup -----------------------------------------------------------------
 
 	const urlParams = new URLSearchParams(window.location.search);
-	const urlAPI = urlParams.get('api') || '/api/v1';
+	const urlAPI = (urlParams.get('api') || '/api/v1').replace(/\/$/, '');  // Get api url (and remove trailing slash if present)
 
+	/*
 	function redirect_to_hash({hash='#'}={}) {
 		render_username_nav();
 		window.location.hash = hash;
@@ -275,11 +296,12 @@ a {
 		}
 	}
 	render_username_nav();
-
+	*/
 
 	// Create Item -------------------------------------------------------------
 
 	const FIELDS_ITEM_CREATE = ['lat','lon','description','image','keywords'];
+	FIELDS_ITEM_CREATE.push('user_id');  // HACK - Simplify Client
 	function get_item_data_from_form_element($el) {
 		return {
 			...Object.fromEntries(
@@ -287,9 +309,9 @@ a {
 					field,
 					$el.querySelector(`[name="${field}"]`).value,
 			])),
-			...{
-				'user_id': username,
-			}
+			//...{  // HACK - Simplify Client
+			//	'user_id': username,
+			//}
 		}
 	}
 
@@ -353,12 +375,12 @@ a {
 		const user_id = $template.querySelector(`[data-field="user_id"]`).textContent;
 		const item_id = $template.querySelector(`[data-field="id"]`).textContent;
 		const $delete = $template.querySelector(`[data-action="delete"]`);
-		if (user_id == username) {
+		//if (user_id == username) { // HACK - Simplify Client
 			$delete.addEventListener('click', () => delete_item(item_id));
-		}
-		else {
-			$delete.style = "display: none;";
-		}
+		//} // HACK - Simplify Client
+		//else {
+		//	$delete.style = "display: none;";
+		//}
 	}
 
 	function renderDataToTemplate(data, $template, renderFieldLookup) {
@@ -389,7 +411,7 @@ a {
 		.catch(err => console.error(err));
 	}
 
-
+/*
 	function lookup_postcode(event) {
 		event.preventDefault();
 		const get_form_el = (field) => event.target.parentElement.querySelector(`input[name="${field}"]`);
@@ -402,21 +424,22 @@ a {
 			})
 		.catch(err => console.error(err));
 	}
-
+*/
 	// Main Rendering ----------------------------------------------------------
 
 	const action_handlers = {
-		signin: signin,
+		//signin: signin,
 		create_item: create_item,
-		lookup_postcode: lookup_postcode,
+		//lookup_postcode: lookup_postcode,
 	}
+
 	function bind_functions_to_onclick() {
 		for (let $el of document.querySelectorAll("[data-action]")){
 			const action = $el.dataset.action;
 			$el.addEventListener('click', action_handlers[action]);
 		}
 	}
-
+/*
 
 	// Base64 images
 	// https://stackoverflow.com/questions/6150289/how-can-i-convert-an-image-into-base64-string-using-javascript
@@ -452,9 +475,17 @@ a {
 		(RENDERERS[window.location.hash] || render_template)();
 	}
 	window.addEventListener('hashchange', hashchange);
-	
-
 	// First load
+	hashchange();
+	*/
+
+	// HACK - Simplify Client
+	function hashchange() {
+		// reload the components
+		clear_node(document.querySelector(`[data-page="items"] ul`));
+		bind_functions_to_onclick();
+		render_items();
+	}
 	hashchange();
 
 </script>

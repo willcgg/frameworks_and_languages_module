@@ -42,5 +42,5 @@ test_example_client:  ##
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down
 
 cypress:  ## Launch local cypress from container (requires an XServer and DISPLAY env)
-	${DOCKER_COMPOSE_EXAMPLE_TEST} run --rm client_test open --project .
+	${DOCKER_COMPOSE_EXAMPLE_TEST} run --rm --env DISPLAY client_test open --project .
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down

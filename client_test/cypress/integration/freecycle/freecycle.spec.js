@@ -50,6 +50,7 @@ describe('FreeCycle', () => {
 	})
 	Cypress.Commands.add('delete_item', (item_id) => {
 		//cy.navigate("MyItems");  // HACK - Simplify Client
+		cy.contains(`[data-field="id"]`, item_id).should('exist');
 		cy.contains(`[data-field="id"]`, item_id).parent("li").find(`[data-action="delete"]`).click();
 		cy.contains(`[data-field="id"]`, item_id).should('not.exist');
 	})

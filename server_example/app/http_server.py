@@ -120,7 +120,7 @@ def serve_app(func_app, port, host=''):
                     # HACK: If we don't have a complete message - try to botch another recv - I feel dirty doing this 
                     # This probably wont work because utf8 decoded data will have a different content length 
                     # This needs more testing
-                    while int(request.get('Content-Length', 0)) > len(request['body']):
+                    while int(request.get('content-length', 0)) > len(request['body']):
                         request['body'] += conn.recv(65535).decode('utf8')
 
                     try:

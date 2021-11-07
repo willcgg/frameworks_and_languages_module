@@ -16,8 +16,6 @@ ROUTES = (
 )
 
 def app(request):
-    #log.debug(request)
-
     request = decode_json_request(request)
 
     if _func := find_route_func(request, ROUTES):

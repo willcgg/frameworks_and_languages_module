@@ -44,7 +44,7 @@ test_example_client:  ##
 cypress:  ## Launch local cypress from container (requires an XServer and DISPLAY env)
 	${DOCKER_COMPOSE_EXAMPLE_TEST} run --rm --env DISPLAY client_test open --project .
 	${DOCKER_COMPOSE_EXAMPLE_TEST} down
-cypress_spec:
+cypress_cmd:
 	${_DOCKER_COMPOSE} --file docker-compose.cypress.yml \
 		run --rm client_test \
-			run --spec cypress/integration/example.spec.js
+			${CYPRESS_CMD}

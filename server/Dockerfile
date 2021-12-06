@@ -1,13 +1,11 @@
 FROM alpine
 
 #app directory 
-WORKDIR /app/
+WORKDIR /server/
 
 #copying and installing app dependencies
 COPY openapi.yml .
 COPY package*.json ./
-
-RUN npm install
 
 #bundling source app
 COPY . .

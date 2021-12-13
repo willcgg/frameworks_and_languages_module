@@ -1,14 +1,16 @@
-FROM alpine
+FROM node
 
 #app directory 
 WORKDIR /server/
 
-#copying and installing app dependencies
-COPY openapi.yml .
+#copying app dependencies
 COPY package*.json ./
 
 #bundling source app
 COPY . .
+
+#installing dependencies
+run npm install
 
 #exposing port
 EXPOSE 8000

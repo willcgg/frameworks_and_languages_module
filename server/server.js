@@ -2,9 +2,7 @@
 
 //app modules
 const express = require('express');
-const { hostname } = require('os');
 const path = require('path');
-const { time } = require('console');
 const items = require('./items');
 
 //constants
@@ -31,25 +29,41 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app
   //gets all items
-  .get((req, res) => {
+  .get("/item/", (req, res) => {
     res.json(items);
   })
-app
   //add new item to page
-  .post('/item/', (req, res, user_id, keywords, description, latitude, longitude) => {
-    if (user_id == "" || keywords == "" || description == "" | latitude == 0 || longitude == 0) {
-      res.status(405).json({ msg: `No item with the id of ${req.params.itemId}` });
-      res.Send("<h1>ERROR 405</h1><p>Invalid Input: Maybe you missed a field</p>\n<p><a href=" / ">Back to homepage</a></p>");
-      return;
+  .post("/item/", (req, res, user_id, keywords, description, latitude, longitude) => {
+    const newItem = 
+    {
+      id: items.nextID, //assigns next available int
+      user_id: req.body.name,
+      keywords: req.body.keywords,
+      description: req.body.description,
+      image: req.body.image,
+      latitude: req.body.latitude,
+      longitude: req.body.longitude,
+      date_from: new Date(),
+      date_to: new Date(),
     }
+    //checks the newItem is not empty
+    if(!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude)
+    {
+      //if it is empty, break out of execution
+      return res.status(400).json({msg : 'Bad Request. Please include: userID, keywords, description, latitude and longitude'});
+    }
+    //pushes to items list
+    items.push(newItem);
+    //returns the new complete item list
+    res.json(items);
   })
   //gets single item by id
   .get("/item/:itemId", (req, res) => {
     //checks items.js has that particular itemId
-    const findItem = items.some(member => member.id === parseInt(req.params.itemId));
+    const findItem = items.some(find => find.id === parseInt(req.params.itemId));
 
     if (findItem) {
-      //item found
+      //item found return item in json
       res.json(items.filter(item => item.id === parseInt(req.params.itemId)));
     }
     else {
@@ -59,7 +73,8 @@ app
     }
   })
   //delete single item by id
-  .delete((req, res) => {
+  .delete("/item/:itemId",(req, res) => {
+    const findItem = items.some(item => item.id === parseInt(req.params.itemId));
 
   })
 
@@ -67,7 +82,6 @@ app
   app
   .get('/items/', (req, res) =>
   {
-    
   })
 
 app.listen(port, (err) => {

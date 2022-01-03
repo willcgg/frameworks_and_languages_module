@@ -5,12 +5,11 @@ WORKDIR /server/
 
 #copying app dependencies
 COPY package*.json ./
+#installing dependencies
+run npm install
 
 #bundling source app
 COPY . .
-
-#installing dependencies
-run npm install
 
 #exposing port
 EXPOSE 8000

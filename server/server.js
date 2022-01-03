@@ -28,10 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //ROUTES
 
 app
-  //gets all items
-  .get("/item/", (req, res) => {
-    res.json(items);
-  })
   //add new item to page
   .post("/item/", (req, res, user_id, keywords, description, latitude, longitude) => {
     const newItem = 
@@ -93,3 +89,9 @@ app.listen(port, (err) => {
   //no errors app listening
   console.log(`Example app listening at port 8000...`)
 })
+
+// Docker container exit handler
+// https://github.com/nodejs/node/issues/4182
+process.on('SIGINT', function() {
+  process.exit();
+});

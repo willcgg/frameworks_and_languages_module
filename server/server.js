@@ -1,5 +1,6 @@
 "use strict";
 
+const { json } = require('express');
 //app modules
 const express = require('express');
 const path = require('path');
@@ -29,8 +30,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app
   //add new item to page
-  .post("/item/", (req, res, user_id, keywords, description, latitude, longitude) => {
-    const newItem = 
+  .post("/item/", (req, res) => {
+    var newItem = 
     {
       id: items.nextID, //assigns next available int
       user_id: req.body.name,
@@ -42,32 +43,37 @@ app
       date_from: new Date(),
       date_to: new Date(),
     }
-    //checks the newItem is not empty
+    //checks the newItem has required fields
     if(!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude)
     {
-      //if it is empty, break out of execution
+      //if it does not hit requirements, break out of execution
       return res.status(400).json({msg : 'Bad Request. Please include: userID, keywords, description, latitude and longitude'});
     }
-    //pushes to items list
+    //hits requirements
+    //pushes newItem to item list
     items.push(newItem);
     //returns the new complete item list
     res.json(items);
   })
+
   //gets single item by id
   .get("/item/:itemId", (req, res) => {
-    //checks items.js has that particular itemId
-    const findItem = items.some(find => find.id === parseInt(req.params.itemId));
-
-    if (findItem) {
-      //item found return item in json
-      res.json(items.filter(item => item.id === parseInt(req.params.itemId)));
+    //checks items.js contains items
+    var hasNoItems = Object.keys(items).length == 0;
+    if (hasNoItems) {
+      //items.js contains no items => return information to user via html page and json response
+      res.send('<h1>ERROR 200</h1>\n<p>Item not found: There are currently no Items.</p>\n<a href="/">Back to homepage</a>');
+      return res.status(200).json({ msg: `No items found`});
     }
-    else {
-      //item not found => return error 
-      res.status(400).json({ msg: `No item with the id of ${req.params.itemId}` });
-      res.send('<h1>ERROR 404</h1>\n<p>Item not found: Maybe the itemId you entered was incorrect.</p>\n<a href="/">Back to homepage</a>');
+    // items.js contains items, now search for given id
+    var searchId = parseInt(req.params.itemId);
+    if(items.hasOwnProperty(searchId)){
+      //items contains item with itemId, return in json response
+      var item = items[searchId];
+      res.json(item);
     }
   })
+
   //delete single item by id
   .delete("/item/:itemId",(req, res) => {
     const findItem = items.some(item => item.id === parseInt(req.params.itemId));

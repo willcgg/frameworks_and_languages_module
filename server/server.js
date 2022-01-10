@@ -1,6 +1,5 @@
 "use strict";
 
-const { json } = require('express');
 //app modules
 const express = require('express');
 const path = require('path');
@@ -21,9 +20,7 @@ const logger = (req, res, next) => {
 
 //initializing middleware
 app.use(logger);
-
-//making 'public' a static folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static("public"));
 
 //Item routes: handles every endpoint with /items/
 //ROUTES
@@ -50,7 +47,7 @@ app
       return res.status(400).json({msg : 'Bad Request. Please include: userID, keywords, description, latitude and longitude'});
     }
     //hits requirements
-    //pushes newItem to item list
+    //pushes newItem to item list 
     items.push(newItem);
     //returns the new complete item list
     res.json(items);
@@ -85,6 +82,7 @@ app
   .get('/items/', (req, res) =>
   {
   })
+
 
 app.listen(port, (err) => {
   //error handling

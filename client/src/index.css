@@ -6,18 +6,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
-.App{
-  background-color: #c9c2c2;
-  border: 4px solid #d76fbb;
-}
-
 .Header{
   border: 3px solid #d76fbb;
+  font-size: 16px;
   text-align: center;
 }
+.Header:hover{
+  border: 4px solid #df23ad;
+}
+

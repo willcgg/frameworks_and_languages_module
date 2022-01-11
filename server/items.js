@@ -1,6 +1,5 @@
 
 const items = {
-  /*
   1: {
     "id": 1,
     "user_id": "User Id",
@@ -45,7 +44,6 @@ const items = {
     "date_from": "2019-08-24T14:15:22Z",
     "date_to": "2019-08-24T14:15:22Z"
   }
-  */
 }
 var nextId = Math.max(items.id) + 1;
 module.exports = items;

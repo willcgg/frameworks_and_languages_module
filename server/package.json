@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/willcgg/frameworks_and_languages_module#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.2"
   }
 }

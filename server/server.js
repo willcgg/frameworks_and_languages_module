@@ -20,7 +20,6 @@ const logger = (req, res, next) => {
 
 //initializing middleware
 app.use(logger);
-app.use(express.static("public"));
 
 //Item routes: handles every endpoint with /items/
 //ROUTES
@@ -73,6 +72,14 @@ app
 
   //delete single item by id
   .delete("/item/:itemId",(req, res) => {
+    //checks items.js contains items
+    var hasNoItems = Object.keys(items).length == 0;
+    if(hasNoItems){
+      //has no items
+      res.send('<h1>ERROR 200</h1>\n<p>Item not found: There are currently no Items.</p>\n<a href="/">Back to homepage</a>');
+      return res.status(200).json({ msg: `No items found`});
+    }
+
     const findItem = items.some(item => item.id === parseInt(req.params.itemId));
 
   })

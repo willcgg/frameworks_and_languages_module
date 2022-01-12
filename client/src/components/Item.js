@@ -12,8 +12,8 @@ const Item = ({ item }) => {
                     <Card.Title>Item {item.id}</Card.Title>
                     <Card.Text>
                         <p>Username: {item.user_id} </p>
-                        <p>Lat: {item.latitude} </p>
-                        <p>Lon: {item.longitude} </p>
+                        <p>Latitude: {item.latitude} </p>
+                        <p>Longitude: {item.longitude} </p>
                         <p>Keywords: {item.keywords.map(keyword => <label>ㅤ{keyword},ㅤ</label>)} </p>
                         <p>Description: {item.description}</p>
                         <p>Date posted: {item.date_from} </p>

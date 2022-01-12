@@ -27,7 +27,8 @@ app.use(logger);
 app
   //add new item to page
   .post("/item/", (req, res) => {
-    var newItem = 
+    //initialise new item variable
+    var newItem =
     {
       id: items.nextID, //assigns next available int
       user_id: req.body.name,
@@ -40,16 +41,15 @@ app
       date_to: new Date(),
     }
     //checks the newItem has required fields
-    if(!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude)
-    {
+    if (!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude) {
       //if it does not hit requirements, break out of execution
-      return res.status(400).json({msg : 'Bad Request. Please include: userID, keywords, description, latitude and longitude'});
+      return res.status(405).json({ msg: 'Invalid input' });
     }
     //hits requirements
     //pushes newItem to item list 
     items.push(newItem);
     //returns the new complete item list
-    res.json(items);
+    res.status(201).json({ msg: 'Item created successfully', newItem });
   })
 
   //gets single item by id
@@ -57,37 +57,57 @@ app
     //checks items.js contains items
     var hasNoItems = Object.keys(items).length == 0;
     if (hasNoItems) {
-      //items.js contains no items => return information to user via html page and json response
-      res.send('<h1>ERROR 200</h1>\n<p>Item not found: There are currently no Items.</p>\n<a href="/">Back to homepage</a>');
-      return res.status(200).json({ msg: `No items found`});
+      //items.js contains no items => return information to user via json response
+      return res.status(200).json({ msg: `Successful Operation. No items found.` });
     }
-    // items.js contains items, now search for given id
-    var searchId = parseInt(req.params.itemId);
-    if(items.hasOwnProperty(searchId)){
+
+    //initialising search id
+    var searchId = req.params.itemId;
+    //gets all item ids into an array
+    var itemIds = Object.keys(items);
+
+    if (!itemIds.includes(searchId)) {
+      //items does not contain any items with that search id
+      res.status(404).json({ msg: 'Item not found' });
+    }
+    else if (itemIds.includes(searchId)) {
       //items contains item with itemId, return in json response
       var item = items[searchId];
-      res.json(item);
+      res.status(200).json({ item, msg: 'successful operation' });
+    }
+    else {
+      res.status(400).json({ msg: 'Invalid itemId' })
     }
   })
 
   //delete single item by id
-  .delete("/item/:itemId",(req, res) => {
+  .delete("/item/:itemId", (req, res) => {
     //checks items.js contains items
     var hasNoItems = Object.keys(items).length == 0;
-    if(hasNoItems){
+    if (hasNoItems) {
       //has no items
-      res.send('<h1>ERROR 200</h1>\n<p>Item not found: There are currently no Items.</p>\n<a href="/">Back to homepage</a>');
-      return res.status(200).json({ msg: `No items found`});
+      return res.status(200).json({ msg: `No items found` });
     }
 
-    const findItem = items.some(item => item.id === parseInt(req.params.itemId));
+    //check items contains the itemID
+    const searchID = req.params.itemId;
+    const itemIds = Object.keys(items);
 
+    if (!itemIds.includes(searchID)) {
+      //doesnt find the item
+      res.status(400).json({ msg: 'Invalid itemID' });
+    }
+    else if (itemIds.includes(searchID)) {
+      //finds item
+      delete items[searchID];
+      return res.status(200).json({ items });
+    }
   })
 
-  //gets items based on search 
-  app
-  .get('/items/', (req, res) =>
-  {
+//gets items based on search 
+app
+  .get('/items/', (req, res) => {
+    res.status(200).json(items);
   })
 
 
@@ -103,6 +123,6 @@ app.listen(port, (err) => {
 
 // Docker container exit handler
 // https://github.com/nodejs/node/issues/4182
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
   process.exit();
 });

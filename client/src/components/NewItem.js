@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import '../index.css';
 
 const NewItem = () => {
     return (
         <div>
+            <h1>New Item</h1>
             <Container >
-                <h1>New Item</h1>
                 <Row>
                     <Col>
                         <p>Username: </p>
@@ -23,9 +24,9 @@ const NewItem = () => {
                         <p>Description:</p>
                         <input></input>
                     </Col>
-                    <Col><Button variant='secondary'>Add</Button></Col>
+                    <Button style={{ margin: "20px" }} variant="light" >Add New Item</Button>
                 </Row>
-                
+
             </Container>
         </div>
     )

@@ -1,21 +1,21 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container} from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Item from './Item';
 
-const Items = ({items}) => {
+const Items = ({ items }) => {
     return (
         <div>
-            <Container >
-                <h1>Items</h1>
-                <>
-                {
-                    items.map((item) => (
-                        <Item item = {item}/>
-                    ))}
-                </>
-                
+            <h1>Items</h1>
+            <Container>
+                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                    <>
+                        {
+                            items.map((item) => (
+                                <Item item={item} />
+                            ))}
+                    </>
+                </div>
             </Container>
-
         </div>
     )
 }

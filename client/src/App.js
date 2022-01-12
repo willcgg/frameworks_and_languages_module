@@ -51,8 +51,8 @@ function App() {
       <Header />
       <Container fluid>
         <NewItem />
-        <Items items = {items}/>
-        <Footer />
+        <Items items={items} />
+      <Footer />
       </Container>
     </div>
   );

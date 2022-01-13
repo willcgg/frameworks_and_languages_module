@@ -11,7 +11,7 @@ function App() {
 
   //gets items from server on page load
   useEffect(() => {
-    const getItems = async() =>{
+    const getItems = async () => {
       const items = await fetchItems();
       setItems(items);
     }
@@ -19,7 +19,7 @@ function App() {
   }, [])
 
   //fetches items from express server
-  const fetchItems = async() =>{
+  const fetchItems = async () => {
     const res = await fetch('/items');
     const data = await res.json();
     const dataConverted = [];
@@ -28,16 +28,29 @@ function App() {
     }
     return dataConverted;
   }
-
+  //gets and sets items in state
   const [items, setItems] = useState([]);
+
+  const deleteItem = async(id) => {
+    //deleting items from server held items file
+    const deleteItem = await fetch(`/item/${id}`, {
+      method: 'DELETE'
+    })
+    //checks item got deleted from server
+    if(!deleteItem){
+      return;
+    }
+    //filtering down client items in state
+    setItems(items.filter((item) => item.id !== id));
+  }
 
   return (
     <div>
       <Header />
       <Container fluid>
         <NewItem />
-        <Items items={items} />
-      <Footer />
+        <Items items={items} deleteItem={deleteItem} />
+        <Footer />
       </Container>
     </div>
   );

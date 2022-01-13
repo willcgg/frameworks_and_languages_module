@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import Item from './Item';
 
-const Items = ({ items }) => {
+const Items = ({ items, deleteItem }) => {
     return (
         <div>
             <h1>Items</h1>
@@ -11,7 +11,7 @@ const Items = ({ items }) => {
                     <>
                         {
                             items.map((item) => (
-                                <Item item={item} />
+                                <Item key= {item.id} item={item} deleteItem = {deleteItem} />
                             ))}
                     </>
                 </div>

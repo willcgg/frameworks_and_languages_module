@@ -1,5 +1,5 @@
 
-const items = {
+var items = {
   
   1: {
     "id": 1,
@@ -34,18 +34,6 @@ const items = {
     "date_from": "2019-08-24T14:15:22Z",
     "date_to": "2019-08-24T14:15:22Z"
   },
-  4: {
-    "id": 4,
-    "user_id": "User Id",
-    "keywords": ["list", "of", "key", "words"],
-    "description": "Item Description",
-    "image": "https://placekitten.com/301/302",
-    "latitude": 0,
-    "longitude": 0,
-    "date_from": "2019-08-24T14:15:22Z",
-    "date_to": "2019-08-24T14:15:22Z"
-  }
   
 }
-var nextId = Math.max(items.id) + 1;
 module.exports = items;

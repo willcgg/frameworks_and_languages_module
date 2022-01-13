@@ -1,10 +1,10 @@
 const header = () => {
     return (
-        <div className="Header">
+        <header className="Header">
             <a href=".">
                 <h1>📍Freecycle</h1>
             </a>
-        </div>
+        </header>
     )
 }
 

@@ -1,9 +1,10 @@
 "use strict";
 
+
 //app modules
 const express = require('express');
-const path = require('path');
 const items = require('./items');
+var cors = require('cors')
 
 //constants
 const port = 8000;
@@ -17,29 +18,42 @@ const logger = (req, res, next) => {
     req.headers['x-forwarded-for'] + "\nAt: " + date);
   next();
 }
+//cors config
+var corsOptions = {
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}
 
-//initializing middleware
+//logger middleware to see incoming requests in console
 app.use(logger);
+//body parser middleware so can break down requests
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 //Item routes: handles every endpoint with /items/
 //ROUTES
 
 app
   //add new item to page
-  .post("/item/", (req, res) => {
+  .post("/item", (req, res) => {
+    //find highest index in dictionary
+    var nextId = parseInt(Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b)) + 1;
+
     //initialise new item variable
-    var newItem =
-    {
-      id: items.nextID, //assigns next available int
-      user_id: req.body.name,
+    const newItem = {
+      id: nextId,
+      user_id: req.body.user_id,
       keywords: req.body.keywords,
       description: req.body.description,
       image: req.body.image,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
-      date_from: new Date(),
-      date_to: new Date(),
-    }
+      date_from: new Date,
+      date_to: new Date
+    };
+
     //checks the newItem has required fields
     if (!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude) {
       //if it does not hit requirements, break out of execution
@@ -47,7 +61,7 @@ app
     }
     //hits requirements
     //pushes newItem to item list 
-    items.push(newItem);
+    items[newItem.id] = newItem;
     //returns the new complete item list
     res.status(201).json({ msg: 'Item created successfully', newItem });
   })

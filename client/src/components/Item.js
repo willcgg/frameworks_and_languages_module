@@ -5,7 +5,6 @@ import '../index.css';
 const Item = ({ item }) => {
     const src = item.image;
     return (
-        <div>
             <Card className = "card">
                 <Card.Img variant="top" src={src} />
                 <Card.Body>
@@ -20,8 +19,7 @@ const Item = ({ item }) => {
                     </Card.Text>
                     <Button variant = "danger">Delete</Button>
                 </Card.Body>
-            </Card>
-        </div>
+            </Card>  
     )
 }
 

@@ -46,8 +46,7 @@ app
   //add new item to page
   .post("/item", cors(corsPostOptions), (req, res) => {
     //find highest index in dictionary
-    var nextId = parseInt(Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b)) + 1;
-    var     
+    var nextId = parseInt(Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b)) + 1;     
     //initialise new item variable
     const newItem = {
       id: nextId,
@@ -72,7 +71,7 @@ app
     //pushes newItem to item list 
     items[newItem.id] = newItem;
     //returns the new complete item list
-    res.status(201).json({items});
+    res.status(201).json(items);
   })
 
   //gets single item by id

@@ -49,7 +49,7 @@ function App() {
   const addItem = async (item) => {
     console.log(JSON.stringify(item));
     //add item to server
-    const res = await fetch("/item", {
+    await fetch("/item", {
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json'
@@ -57,15 +57,7 @@ function App() {
       body: JSON.stringify(item), 
     })
 
-    const data = await res.json();
-    //converting data to array to avoid errors
-    const dataConverted = [];
-    for (let item of Object.values(data)) {
-      dataConverted.push(item);
-    }
     //add item to client state
-    setItems(dataConverted);
-    //updating client side
     fetchItems();
   }
 

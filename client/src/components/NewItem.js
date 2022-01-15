@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import '../index.css';
 
-const NewItem = ({addItem}) => {
+const NewItem = ({ addItem }) => {
 
     //variables in state
     const [user_id, setUserId] = useState('');
@@ -32,7 +32,6 @@ const NewItem = ({addItem}) => {
             latitude: latitude,
             longitude: longitude,
         };
-        console.log(newItem)
         //call upwards to add the item
         addItem(newItem);
         //clearing state and therefore the form
@@ -75,8 +74,8 @@ const NewItem = ({addItem}) => {
                 <Form.Label>Description</Form.Label>
                 <Form.Control placeholder="Enter a Description" value={description} onChange={(e) => setDescription(e.target.value)} />
             </Form.Group>
-            <input type= 'submit' value='Save Item'></input>
-            
+            <input type='submit' value='Save Item'></input>
+
         </Form>
     )
 }

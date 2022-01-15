@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Button } from 'react-bootstrap';
 import '../index.css';
 
-const Item = ({ item , deleteItem}) => {
+const Item = ({ item, deleteItem }) => {
     const src = item.image;
     return (
         <Card className="card">
@@ -19,7 +19,7 @@ const Item = ({ item , deleteItem}) => {
                     Description: {item.description}<br />
                     Date posted: {item.date_from} <br />
                 </Card.Text>
-                <Button variant="danger" onClick={()=>deleteItem(item.id)}>Delete</Button>
+                <Button variant="danger" onClick={() => deleteItem(item.id)}>Delete</Button>
             </Card.Body>
         </Card>
     )

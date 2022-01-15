@@ -11,7 +11,7 @@ const Items = ({ items, deleteItem }) => {
                     <>
                         {
                             items.map((item) => (
-                                <Item key= {item.id} item={item} deleteItem = {deleteItem} />
+                                <Item key={item.id} item={item} deleteItem={deleteItem} />
                             ))}
                     </>
                 </div>

@@ -47,14 +47,13 @@ function App() {
 
   //add item
   const addItem = async (item) => {
-    console.log(JSON.stringify(item));
     //add item to server
     await fetch("/item", {
       method: 'POST',
       headers: {
-        'Content-Type' : 'application/json'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(item), 
+      body: JSON.stringify(item),
     })
 
     //add item to client state

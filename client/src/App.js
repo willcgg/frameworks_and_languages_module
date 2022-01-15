@@ -47,20 +47,26 @@ function App() {
 
   //add item
   const addItem = async (item) => {
+    console.log(JSON.stringify(item));
     //add item to server
-    const res = await fetch('http://localhost:8000/item', {
+    const res = await fetch("/item", {
       method: 'POST',
-      body: JSON.stringify(item),
+      headers: {
+        'Content-Type' : 'application/json'
+      },
+      body: JSON.stringify(item), 
     })
 
     const data = await res.json();
     //converting data to array to avoid errors
     const dataConverted = [];
-    for (let property of Object.values(data)) {
-      dataConverted.push(property);
+    for (let item of Object.values(data)) {
+      dataConverted.push(item);
     }
     //add item to client state
     setItems(dataConverted);
+    //updating client side
+    fetchItems();
   }
 
   return (

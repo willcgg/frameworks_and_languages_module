@@ -47,7 +47,7 @@ app
   .post("/item", cors(corsPostOptions), (req, res) => {
     //find highest index in dictionary
     var nextId = parseInt(Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b)) + 1;
-
+    var     
     //initialise new item variable
     const newItem = {
       id: nextId,
@@ -60,6 +60,8 @@ app
       date_from: new Date,
       date_to: new Date
     };
+
+    console.log(newItem);
 
     //checks the newItem has required fields
     if (!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude) {

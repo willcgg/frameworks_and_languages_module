@@ -4,51 +4,73 @@ import Header from "./components/Header";
 import NewItem from './components/NewItem';
 import Items from './components/Items';
 import Footer from './components/Footer';
-import { Container } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 
 function App() {
 
+  //gets and sets items in state
+  const [items, setItems] = useState([]);
+  const [addItemForm, setFormVisibility] = useState(false);
+
   //gets items from server on page load
   useEffect(() => {
-    const getItems = async () => {
-      const items = await fetchItems();
-      setItems(items);
-    }
-    getItems();
+    fetchItems();
   }, [])
 
   //fetches items from express server
   const fetchItems = async () => {
     const res = await fetch('/items');
     const data = await res.json();
+    //converting data to array to avoid errors
     const dataConverted = [];
     for (let item of Object.values(data)) {
       dataConverted.push(item);
     }
-    return dataConverted;
+    //sets items in client state
+    setItems(dataConverted);
   }
-  //gets and sets items in state
-  const [items, setItems] = useState([]);
 
-  const deleteItem = async(id) => {
-    //deleting items from server held items file
+  //delete item
+  const deleteItem = async (id) => {
+    //delete items from server
     const deleteItem = await fetch(`/item/${id}`, {
       method: 'DELETE'
     })
     //checks item got deleted from server
-    if(!deleteItem){
+    if (!deleteItem) {
       return;
     }
-    //filtering down client items in state
+    //delete items from client state
     setItems(items.filter((item) => item.id !== id));
+  }
+
+  //add item
+  const addItem = async (item) => {
+    //add item to server
+    const res = await fetch('http://localhost:8000/item', {
+      method: 'POST',
+      body: JSON.stringify(item),
+    })
+
+    const data = await res.json();
+    //converting data to array to avoid errors
+    const dataConverted = [];
+    for (let property of Object.values(data)) {
+      dataConverted.push(property);
+    }
+    //add item to client state
+    setItems(dataConverted);
   }
 
   return (
     <div>
       <Header />
       <Container fluid>
-        <NewItem />
+        <Button variant={addItemForm ? "danger" : "primary"} size="lg" onClick={() => { setFormVisibility(!addItemForm) }}>
+          {addItemForm ? "Close" : "Add Item"}
+        </Button>{' '}
+        {addItemForm && <NewItem addItem={addItem} />}
         <Items items={items} deleteItem={deleteItem} />
         <Footer />
       </Container>

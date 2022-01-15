@@ -13,8 +13,8 @@ const Item = ({ item , deleteItem}) => {
                     Username: {item.user_id} <br />
                     Latitude: {item.latitude} <br />
                     Longitude: {item.longitude} <br />
-                    Keywords: {item.keywords.map(item => {
-                        return <li>{item}</li>;
+                    Keywords: {item.keywords.map((keyword) => {
+                        return <li>{keyword}</li>;
                     })} <br />
                     Description: {item.description}<br />
                     Date posted: {item.date_from} <br />

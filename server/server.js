@@ -4,9 +4,9 @@
 //app modules
 const express = require('express');
 const items = require('./items');
-var cors = require('cors')
+var cors = require('cors');
 
-//constants
+//constantss
 const port = 8000;
 const app = express();
 
@@ -19,25 +19,32 @@ const logger = (req, res, next) => {
   next();
 }
 //cors config
-var corsOptions = {
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204
+var corsPostOptions = {
+  origin: '*',
+  methods: 'GET,POST',
+  allowedHeaders: 'Content-Type'
+}
+var corsDelOptions = {
+  origin: '*',
+  methods: 'DELETE',
+  allowedHeaders: 'Content-Type'
 }
 
 //logger middleware to see incoming requests in console
 app.use(logger);
 //body parser middleware so can break down requests
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
-//Item routes: handles every endpoint with /items/
+
 //ROUTES
+//Item routes: handles every endpoint with /items/
+
+app.options('*', cors())
 
 app
   //add new item to page
-  .post("/item", (req, res) => {
+  .post("/item", cors(corsPostOptions), (req, res) => {
     //find highest index in dictionary
     var nextId = parseInt(Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b)) + 1;
 
@@ -63,11 +70,11 @@ app
     //pushes newItem to item list 
     items[newItem.id] = newItem;
     //returns the new complete item list
-    res.status(201).json({ msg: 'Item created successfully', newItem });
+    res.status(201).json({items});
   })
 
   //gets single item by id
-  .get("/item/:itemId", (req, res) => {
+  .get("/item/:itemId", cors(corsPostOptions), (req, res) => {
     //checks items.js contains items
     var hasNoItems = Object.keys(items).length == 0;
     if (hasNoItems) {
@@ -95,7 +102,7 @@ app
   })
 
   //delete single item by id
-  .delete("/item/:itemId", (req, res) => {
+  .delete("/item/:itemId", cors(corsDelOptions), (req, res) => {
     //checks items.js contains items
     var hasNoItems = Object.keys(items).length == 0;
     if (hasNoItems) {
@@ -111,16 +118,14 @@ app
       //doesnt find the item
       res.status(400).json({ msg: 'Invalid itemID' });
     }
-    else if (itemIds.includes(searchID)) {
-      //finds item
-      delete items[searchID];
-      return res.status(200).json({ items });
-    }
+    //finds item
+    delete items[searchID];
+    return res.status(200).json({ items });
   })
 
 //gets items based on search 
 app
-  .get('/items/', (req, res) => {
+  .get('/items/', cors(corsPostOptions), (req, res) => {
     res.status(200).json(items);
   })
 

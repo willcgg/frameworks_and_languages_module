@@ -14,7 +14,6 @@ Website should now be running on http://localhost:8001
 
 - Clone repo into new workspace using http:gitpod.io/#https://github.com/willcgg/frameworks_and_languages_module
 - Edit requests in client side app.js folder on ALL fetch requests change all 'http:localhost:8000' to 'https://8000' followed by whatever the gitpod provided link is at the top of your browser e.g. 'https://8000-willcgg-frameworksandla-ik3tq7sj973.ws-eu27.gitpod.io' this is to ensure the client is requesting from the server correctly
-- Cd into server folder and type 'make build' then 'make run'
 - Cd into client folder and type 'make build' then 'make run'
 
 ## On windows systems

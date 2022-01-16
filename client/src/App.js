@@ -20,7 +20,12 @@ function App() {
 
   //fetches items from express server
   const fetchItems = async () => {
-    const res = await fetch('/items');
+    const res = await fetch(`http://localhost:8000/items`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    });
     const data = await res.json();
     //converting data to array to avoid errors
     const dataConverted = [];
@@ -34,7 +39,7 @@ function App() {
   //delete item
   const deleteItem = async (id) => {
     //delete items from server
-    const deleteItem = await fetch(`/item/${id}`, {
+    const deleteItem = await fetch(`http://localhost:8000/item/${id}`, {
       method: 'DELETE'
     })
     //checks item got deleted from server
@@ -48,7 +53,7 @@ function App() {
   //add item
   const addItem = async (item) => {
     //add item to server
-    await fetch("/item", {
+    await fetch("http://localhost:8000/item", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -64,7 +69,7 @@ function App() {
     <div>
       <Header />
       <Container fluid>
-        <Button variant={addItemForm ? "danger" : "primary"} size="lg" onClick={() => { setFormVisibility(!addItemForm) }}>
+        <Button className='Button' variant={addItemForm ? "danger" : "primary"} size="lg" onClick={() => { setFormVisibility(!addItemForm) }}>
           {addItemForm ? "Close" : "Add Item"}
         </Button>{' '}
         {addItemForm && <NewItem addItem={addItem} />}

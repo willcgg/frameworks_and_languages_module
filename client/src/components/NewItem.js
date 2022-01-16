@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import '../index.css';
 
 const NewItem = ({ addItem }) => {
@@ -44,7 +44,7 @@ const NewItem = ({ addItem }) => {
     }
 
     return (
-        <Form onSubmit={onAddItem}>
+        <Form className='NewItem' onSubmit={onAddItem}>
             <h1>New Item</h1>
             <Form.Group className="mb-3" controlId="formUsername">
                 <Form.Label>Username</Form.Label>
@@ -74,8 +74,9 @@ const NewItem = ({ addItem }) => {
                 <Form.Label>Description</Form.Label>
                 <Form.Control placeholder="Enter a Description" value={description} onChange={(e) => setDescription(e.target.value)} />
             </Form.Group>
-            <input type='submit' value='Save Item'></input>
-
+            <div className='ButtonHolder'>
+            <Button className = "NewItemButton" type='submit' size = 'lg' variant='success' >Save Item</Button>
+            </div>
         </Form>
     )
 }

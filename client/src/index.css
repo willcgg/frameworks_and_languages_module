@@ -11,9 +11,20 @@ code {
     monospace;
 }
 
-Button {
-  padding: 15px 32px;
-  margin: 150px 50px;
+.Button {
+  margin-left: 80%;
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.ButtonHolder {
+  text-align: center;
+  padding: 15px;
+}
+
+.NewItem {
+  padding: 15px;
+  border: 3px solid #d76fbb;
 }
 
 button {

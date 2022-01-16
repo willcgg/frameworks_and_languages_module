@@ -5,6 +5,7 @@
 const express = require('express');
 const items = require('./items');
 var cors = require('cors');
+const path = require('path');
 
 //constantss
 const port = 8000;
@@ -18,33 +19,23 @@ const logger = (req, res, next) => {
     req.headers['x-forwarded-for'] + "\nAt: " + date);
   next();
 }
-//cors config
-var corsPostOptions = {
-  origin: '*',
-  methods: 'GET,POST',
-  allowedHeaders: 'Content-Type'
-}
-var corsDelOptions = {
-  origin: '*',
-  methods: 'DELETE',
-  allowedHeaders: 'Content-Type'
-}
-
+//cors middleware to only allow resource sharing with the client
+//allows GET POST DELETE and OPTIONS requests from http:localhost:8001 which will be where our client is hosted from
+app.use(cors({
+  origin: 'http://localhost:8001',
+  methods: ['GET','POST','DELETE', 'OPTIONS']
+}));
 //logger middleware to see incoming requests in console
 app.use(logger);
 //body parser middleware so can break down requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
 //ROUTES
 //Item routes: handles every endpoint with /items/
-
-app.options('*', cors())
-
 app
   //add new item to page
-  .post("/item", cors(corsPostOptions), (req, res) => {
+  .post("/item", (req, res) => {
     //find highest index in dictionary
     var nextId = parseInt(Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b)) + 1;
     //initialise new item variable
@@ -54,14 +45,14 @@ app
       keywords: req.body.keywords,
       description: req.body.description,
       image: req.body.image,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
+      lat: req.body.latitude,
+      lon: req.body.longitude,
       date_from: new Date,
       date_to: new Date
     };
 
     //checks the newItem has required fields
-    if (!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.latitude || !newItem.longitude) {
+    if (!newItem.user_id || !newItem.keywords || !newItem.description || !newItem.lat || !newItem.lon) {
       //if it does not hit requirements, break out of execution
       return res.status(405).json({ msg: 'Invalid input' });
     }
@@ -73,7 +64,7 @@ app
   })
 
   //gets single item by id
-  .get("/item/:itemId", cors(corsPostOptions), (req, res) => {
+  .get("/item/:itemId", (req, res) => {
     //checks items.js contains items
     var hasNoItems = Object.keys(items).length == 0;
     if (hasNoItems) {
@@ -101,7 +92,7 @@ app
   })
 
   //delete single item by id
-  .delete("/item/:itemId", cors(corsDelOptions), (req, res) => {
+  .delete("/item/:itemId", (req, res) => {
     //checks items.js contains items
     var hasNoItems = Object.keys(items).length == 0;
     if (hasNoItems) {
@@ -124,7 +115,7 @@ app
 
 //gets items based on search 
 app
-  .get('/items/', cors(corsPostOptions), (req, res) => {
+  .get('/items/', (req, res) => {
     res.status(200).json(items);
   })
 

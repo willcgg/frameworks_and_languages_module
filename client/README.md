@@ -1,70 +1,35 @@
-# Getting Started with Create React App
+# Getting Started with Freecycle app
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## On linux systems
 
-In the project directory, you can run:
+- Clone repository
+- Open folder in terminal
+- Cd into client folder and type 'make build' then 'make run'. Please ensure you have first run the server in order for the client to correctly load items to the page.
 
-### `npm start`
+Website should now be running on http://localhost:8001
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## On Git pod
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Clone repo into new workspace using http:gitpod.io/#https://github.com/willcgg/frameworks_and_languages_module
+- Edit requests in client side app.js folder on ALL fetch requests change all 'http:localhost:8000' to 'https://8000' followed by whatever the gitpod provided link is at the top of your browser e.g. 'https://8000-willcgg-frameworksandla-ik3tq7sj973.ws-eu27.gitpod.io' this is to ensure the client is requesting from the server correctly
+- Cd into server folder and type 'make build' then 'make run'
+- Cd into client folder and type 'make build' then 'make run'
 
-### `npm test`
+## On windows systems
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+from https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows <br/>
+'make' is a GNU command so the only way you can get it on Windows is installing a Windows version like the one provided by GNUWin32. Anyway, there are several options for getting that:
 
-### `npm run build`
+The most simple choice is using Chocolatey. First you need to install this package manager. Once installed you simlpy need to install make (you may need to run it in an elevated/admin command prompt) :
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+choco install make
+Other recommended option is installing a Windows Subsystem for Linux (WSL/WSL2), so you'll have a Linux distribution of your choice embedded in Windows 10 where you'll be able to install make, gccand all the tools you need to build C programs.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Once chocolatey has been installed via steps above, Clone repository
+- Open folder in terminal
+- Cd into client folder and type 'make build' then 'make run'
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Website should now be running on http://localhost:8001
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

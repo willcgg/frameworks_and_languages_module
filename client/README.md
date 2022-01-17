@@ -6,7 +6,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 - Clone repository
 - Open folder in terminal
-- Cd into client folder and type 'make build' then 'make run'. Please ensure you have first run the server in order for the client to correctly load items to the page.
+- Cd into client folder and type 'npm run build', this will give you the build folder which contains all of the client code optimized and ready to deploy
+- Once the build folder is present, cd into the server folder and type 'make build' then 'make run', you will be able to access the app on http:localhost:8000
 
 Website should now be running on http://localhost:8001
 
@@ -14,8 +15,8 @@ Website should now be running on http://localhost:8001
 
 - Clone repo into new workspace using http:gitpod.io/#https://github.com/willcgg/frameworks_and_languages_module
 - Edit requests in client side app.js folder on ALL fetch requests change all 'http:localhost:8000' to 'https://8000' followed by whatever the gitpod provided link is at the top of your browser e.g. 'https://8000-willcgg-frameworksandla-ik3tq7sj973.ws-eu27.gitpod.io' this is to ensure the client is requesting from the server correctly
-- Cd into client folder and type 'make build' then 'make run'
-
+- Cd into client folder and type 'npm run build', this will give you the build folder which contains all of the client code optimized and ready to deploy
+- Once the build folder is present, cd into the server folder and type 'make build' then 'make run', you will be able to access the app on http:localhost:8000
 ## On windows systems
 
 from https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows <br/>
@@ -28,7 +29,8 @@ Other recommended option is installing a Windows Subsystem for Linux (WSL/WSL2),
 
 - Once chocolatey has been installed via steps above, Clone repository
 - Open folder in terminal
-- Cd into client folder and type 'make build' then 'make run'
+- Cd into client folder and type 'npm run build', this will give you the build folder which contains all of the client code optimized and ready to deploy
+- Once the build folder is present, cd into the server folder and type 'make build' then 'make run', you will be able to access the app on http:localhost:8000
 
 Website should now be running on http://localhost:8001
 

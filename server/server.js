@@ -19,6 +19,9 @@ const logger = (req, res, next) => {
     req.headers['x-forwarded-for'] + "\nAt: " + date);
   next();
 }
+
+app.use(express.static(path.join(__dirname, '../client/build')));
+
 //cors middleware to only allow resource sharing with the client
 //allows GET POST DELETE and OPTIONS requests from http:localhost:8001 which will be where our client is hosted from
 app.use(cors({
@@ -33,6 +36,11 @@ app.use(express.urlencoded({ extended: false }));
 
 //ROUTES
 //Item routes: handles every endpoint with /items/
+//serving react app on route
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app
   //add new item to page
   .post("/item", (req, res) => {

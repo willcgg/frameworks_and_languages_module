@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Cd into client folder and type 'npm run build', this will give you the build folder which contains all of the client code optimized and ready to deploy
 - Once the build folder is present, cd into the server folder and type 'make build' then 'make run', you will be able to access the app on http:localhost:8000
 
-Website should now be running on http://localhost:8001
+Website should now be running on http://localhost:8000
 
 ## On Git pod
 

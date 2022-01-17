@@ -32,5 +32,5 @@ Other recommended option is installing a Windows Subsystem for Linux (WSL/WSL2),
 - Cd into client folder and type 'npm run build', this will give you the build folder which contains all of the client code optimized and ready to deploy
 - Once the build folder is present, cd into the server folder and type 'make build' then 'make run', you will be able to access the app on http:localhost:8000
 
-Website should now be running on http://localhost:8001
+Website should now be running on http://localhost:8000
 
